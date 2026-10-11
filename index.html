@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>流体设备边缘智能体 · 让风机水泵压缩机「会诊断、会省电、会说话」</title>
+<meta name="description" content="流体设备边缘智能体（Fluid Equipment Edge Agent）：面向泵、风机、压缩机等流体机械的工业边缘智能配套。设备机理 + 边缘推理 + 智能体编排，跑在国产 RK3576 边缘盒子上，断网可用、数据不出场、AI 只预警不下令。">
+<style>
+  :root{
+    --bg:#080c16; --bg2:#0d1424; --panel:#111a2e; --panel2:#0f1728;
+    --line:#1e2c47; --text:#e6edf7; --muted:#93a4c0; --dim:#6b7d9c;
+    --cyan:#22d3ee; --blue:#3b82f6; --green:#34d399; --amber:#f59e0b; --red:#f87171;
+    --radius:16px; --maxw:1120px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    line-height:1.7; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+  section{padding:76px 0;position:relative}
+  .eyebrow{color:var(--cyan);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
+  h2{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
+  h3{font-size:18px;font-weight:700;margin-bottom:8px}
+  p.lead{color:var(--muted);font-size:16px;max-width:760px}
+  .muted{color:var(--muted)} .dim{color:var(--dim)}
+
+  /* ---------- nav ---------- */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(8,12,22,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:62px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.01em}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 0 14px var(--cyan)}
+  .brand small{display:block;font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.08em}
+  nav.links{display:flex;gap:26px;font-size:14px;color:var(--muted)}
+  nav.links a:hover{color:var(--cyan)}
+  @media(max-width:820px){nav.links{display:none}}
+
+  /* ---------- hero ---------- */
+  .hero{padding:88px 0 64px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(900px 420px at 78% -10%, rgba(34,211,238,.16), transparent 60%),
+      radial-gradient(760px 420px at 8% 6%, rgba(59,130,246,.16), transparent 62%),
+      linear-gradient(180deg,var(--bg2),var(--bg));
+    z-index:-2}
+  .hero::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
+    background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+    background-size:52px 52px;mask-image:radial-gradient(700px 420px at 50% 0%,#000,transparent 75%)}
+  .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+  .badge{border:1px solid var(--line);background:rgba(34,211,238,.06);color:var(--cyan);
+    font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:999px}
+  .badge.g{color:var(--green);background:rgba(52,211,153,.07)}
+  .badge.b{color:#7dd3fc;background:rgba(59,130,246,.08)}
+  h1{font-size:clamp(32px,5.2vw,54px);line-height:1.15;font-weight:900;letter-spacing:-.02em;margin-bottom:18px}
+  h1 .grad{background:linear-gradient(120deg,var(--cyan),var(--blue) 60%,var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);max-width:740px;margin-bottom:30px}
+  .cta{display:flex;flex-wrap:wrap;gap:14px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-weight:700;font-size:14.5px;border:1px solid transparent;transition:.18s}
+  .btn.primary{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#04121c}
+  .btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(34,211,238,.28)}
+  .btn.ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02)}
+  .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px}
+  @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}}
+  .stat{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:18px 18px}
+  .stat .n{font-size:26px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:4px}
+
+  /* ---------- cards ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:.2s}
+  .card:hover{border-color:rgba(34,211,238,.45);transform:translateY(-3px)}
+  .card .ico{font-size:22px;margin-bottom:10px}
+  .card p{color:var(--muted);font-size:14.5px}
+
+  /* ---------- arch ---------- */
+  .arch{display:flex;flex-direction:column;gap:12px;margin-top:34px}
+  .layer{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center;
+    background:linear-gradient(90deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+  @media(max-width:760px){.layer{grid-template-columns:1fr;gap:8px;text-align:left}}
+  .layer .tag{font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px}
+  .layer .tag i{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex:none}
+  .layer .body{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:12.5px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.02);padding:5px 11px;border-radius:8px}
+  .layer.ai{border-color:rgba(34,211,238,.4);background:linear-gradient(90deg,rgba(34,211,238,.08),var(--panel2))}
+  .layer.ai .tag i{background:var(--green);box-shadow:0 0 10px var(--green)}
+  .arrow{align-self:center;color:var(--dim);font-size:13px;text-align:center;margin:-4px 0}
+
+  /* ---------- table ---------- */
+  .tbl{width:100%;border-collapse:collapse;margin-top:26px;font-size:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .tbl th,.tbl td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
+  .tbl th{background:rgba(34,211,238,.07);color:var(--cyan);font-size:12.5px;letter-spacing:.06em;font-weight:700}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr:hover td{background:rgba(255,255,255,.02)}
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+  .pill.normal{background:rgba(52,211,153,.14);color:var(--green)}
+  .pill.high{background:rgba(248,113,113,.14);color:var(--red)}
+  .pill.medium{background:rgba(245,158,11,.15);color:var(--amber)}
+  .ok{color:var(--green);font-weight:800}
+  .hit{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;color:var(--green);font-weight:700}
+
+  /* ---------- code ---------- */
+  pre{background:#060a13;border:1px solid var(--line);border-radius:14px;padding:20px;overflow:auto;font-size:13px;line-height:1.6;margin-top:22px}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#c9d7f0}
+  .k{color:var(--cyan)} .s{color:#a5f3c4} .n{color:#fbbf24} .c{color:#5b6b88}
+
+  .two{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start;margin-top:30px}
+  @media(max-width:900px){.two{grid-template-columns:1fr}}
+  .shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#060a13}
+  .shot img{display:block;width:100%;height:auto}
+  .shot .cap{font-size:12.5px;color:var(--dim);padding:10px 14px;border-top:1px solid var(--line)}
+
+  /* ---------- timeline ---------- */
+  .road{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  @media(max-width:900px){.road{grid-template-columns:1fr}}
+  .phase{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative}
+  .phase.now{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.12) inset}
+  .phase .st{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block;margin-bottom:12px}
+  .st.run{background:rgba(34,211,238,.14);color:var(--cyan)}
+  .st.plan{background:rgba(148,163,184,.14);color:var(--muted)}
+
+  /* ---------- notice ---------- */
+  .notice{border:1px solid rgba(245,158,11,.35);background:linear-gradient(180deg,rgba(245,158,11,.07),transparent);border-radius:var(--radius);padding:24px;margin-top:26px}
+  .notice h3{color:var(--amber)}
+  .notice ul{margin:10px 0 0 18px;color:var(--muted);font-size:14.5px}
+  .notice li{margin:6px 0}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line);padding:44px 0;background:var(--bg2)}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px;align-items:flex-start}
+  .foot .col{font-size:14px;color:var(--muted)}
+  .foot .col b{color:var(--text);display:block;margin-bottom:8px;font-size:13.5px}
+  .foot a:hover{color:var(--cyan)}
+  .copy{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <div class="brand"><span class="dot"></span><span>流体设备边缘智能体<small>FLUID EQUIPMENT EDGE AGENT</small></span></div>
+    <nav class="links">
+      <a href="#value">价值</a>
+      <a href="#arch">架构</a>
+      <a href="#demo">诊断演示</a>
+      <a href="#tech">技术选择</a>
+      <a href="#road">路线图</a>
+      <a href="#contact">合作</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<div class="hero">
+  <div class="wrap">
+    <div class="badge-row">
+      <span class="badge g">断网可用</span>
+      <span class="badge g">数据不出场</span>
+      <span class="badge b">AI 只预警不下令</span>
+      <span class="badge">国产边缘盒子 · RK3576 · 6 TOPS NPU</span>
+    </div>
+    <h1>让风机、水泵、压缩机<br><span class="grad">「会诊断、会省电、会说话」</span></h1>
+    <p class="sub">
+      面向<b>泵、风机、压缩机</b>等流体机械的工业边缘智能配套：一台跑在设备现场的边缘计算盒子，
+      本地完成振动 / 电流 / 温度多信号采集与 AI 推理，实现<b>健康度监测、故障预警、能效分析、自然语言问答</b>。
+      不是通用边缘平台，也不是节能计算器——把「<b>设备机理 + 边缘推理 + 智能体编排</b>」三层串成可跑通的链路。
+    </p>
+    <div class="cta">
+      <a class="btn primary" href="#demo">▶ 看诊断演示</a>
+      <a class="btn ghost" href="#contact">合作与共建 →</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n">7 / 7</div><div class="l">典型工况诊断命中率（含汽蚀/松动）</div></div>
+      <div class="stat"><div class="n">≤ 50 ms</div><div class="l">边缘侧推理时延（RKNN · INT8）</div></div>
+      <div class="stat"><div class="n">14 类</div><div class="l">受控故障类型枚举</div></div>
+      <div class="stat"><div class="n">5 层</div><div class="l">接入→数据→AI→智能体→应用</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= 价值 ================= -->
+<section id="value">
+  <div class="wrap">
+    <div class="eyebrow">它解决什么问题</div>
+    <h2>流体设备 7×24 运行，痛点就三个</h2>
+    <p class="lead">电厂、矿山、化工、市政里，泵 / 风机 / 压缩机是能耗与停机的重灾区。我们从「设备侧」而不是「云侧」下手。</p>
+    <div class="grid3">
+      <div class="card">
+        <div class="ico">🛑</div>
+        <h3>非计划停机</h3>
+        <p>振动 / 电流 / 温度多信号融合，输出健康度评分 + 故障类型预警，提前发现轴承、不平衡、不对中、松动等隐患。</p>
+      </div>
+      <div class="card">
+        <div class="ico">⚡</div>
+        <h3>能耗偏高</h3>
+        <p>工况识别 + 能效趋势分析，为节能改造提供数据底座，让「改不改、改多少」有实测依据。</p>
+      </div>
+      <div class="card">
+        <div class="ico">🧰</div>
+        <h3>售后诊断靠人、响应慢</h3>
+        <p>设备侧边缘盒子本地推理，<b>断网可用</b>，现场自然语言问答，把老师傅经验变成 7×24 在线的「设备医生」。</p>
+      </div>
+    </div>
+    <div class="two" style="margin-top:26px">
+      <div class="card"><h3>对设备厂</h3><p>整机从「卖设备」升级为「卖设备 + 智能服务」，形成差异化卖点与后续服务收入。</p></div>
+      <div class="card"><h3>对终端用户</h3><p>减少非计划停机、降低能耗、售后诊断提速，现场数据本地处理、合规不出场。</p></div>
+    </div>
+    <p class="lead" style="margin-top:22px"><b class="muted">壁垒：</b>设备机理 + 真实失效数据 + 边缘推理——做「设备专用」，不做通用平台。</p>
+  </div>
+</section>
+
+<!-- ================= 架构 ================= -->
+<section id="arch" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow">系统架构</div>
+    <h2>五层链路：从传感器到现场话术</h2>
+    <p class="lead">每一层职责清晰，边界可审计。诊断模型与智能体分层，谁也不越权。</p>
+
+    <div class="arch">
+      <div class="layer">
+        <div class="tag"><i></i>① 设备接入层</div>
+        <div class="body">
+          <span class="chip">加速度计 IEPE</span><span class="chip">温度 / 压力 / 流量</span>
+          <span class="chip">变频器 Modbus</span><span class="chip">电流 / 母线电压 / 状态字</span>
+        </div>
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer">
+        <div class="tag"><i></i>② 数据层（本地）</div>
+        <div class="body"><span class="chip">时序库 · 断网缓存</span><span class="chip">特征提取：时域 / 频域 / 包络谱</span></div>
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer ai">
+        <div class="tag"><i></i>③ AI 层 · RK3576 NPU</div>
+        <div class="body"><span class="chip">机理规则 / 轻量模型</span><span class="chip">RKNN INT8 · ≤50 ms</span><span class="chip">诊断报文 health_score / fault_type / risk_level</span></div>
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer ai">
+        <div class="tag"><i></i>④ 智能体层 · OpenClaw</div>
+        <div class="body"><span class="chip">读取 · 编排 · 翻译</span><span class="chip">四段式话术：结论 / 依据 / 建议 / 风险</span><span class="chip">告警 · 工单</span></div>
+      </div>
+      <div class="arrow">▼</div>
+      <div class="layer">
+        <div class="tag"><i></i>⑤ 应用层</div>
+        <div class="body"><span class="chip">本地看板</span><span class="chip">云边协同 · 远程运维</span></div>
+      </div>
+    </div>
+
+    <div class="notice" style="border-color:rgba(34,211,238,.35);background:linear-gradient(180deg,rgba(34,211,238,.06),transparent)">
+      <h3 style="color:var(--cyan)">三条硬约束（安全边界）</h3>
+      <ul>
+        <li><b>诊断模型层负责「判」</b>：故障类型 / 健康度 / 风险等级 / 寿命，只由模型输出。</li>
+        <li><b>智能体层负责「说与做」</b>：OpenClaw 只读取、编排、翻译，<b>不得自行推断故障</b>。</li>
+        <li><b>不下高危指令</b>：停机 / 切泵只「建议并等待人工确认」，安全保护归设备既有系统。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEMO ================= -->
+<section id="demo">
+  <div class="wrap">
+    <div class="eyebrow">诊断能力演示</div>
+    <h2>零数据依赖，一条命令跑通全链路</h2>
+    <p class="lead">仓库内置旋转机械机理仿真，直接生成 7 类典型工况的振动信号并走完整条诊断链路——开箱即跑、可复现。</p>
+
+    <pre><code><span class="c">$ pip install -r requirements.txt</span>
+<span class="c">$ python3 demo/run_demo.py</span>
+
+仿真工况        诊断结论        健康度   风险      命中
+正常           正常             <span class="n">100</span>    normal   <span class="s">✅</span>
+轴承外圈缺陷    轴承外圈缺陷      <span class="n">58</span>     high     <span class="s">✅</span>
+轴承内圈缺陷    轴承内圈缺陷      <span class="n">48</span>     high     <span class="s">✅</span>
+转子不平衡      转子不平衡        <span class="n">50</span>     high     <span class="s">✅</span>
+联轴器不对中    联轴器不对中      <span class="n">66</span>     medium   <span class="s">✅</span>
+机械松动       机械松动          <span class="n">55</span>     high     <span class="s">✅</span>
+汽蚀           汽蚀             <span class="n">55</span>     high     <span class="s">✅</span>
+<span class="k">→ 命中率 7/7</span></code></pre>
+
+    <div class="two">
+      <div class="shot">
+        <img src="assets/demo_preview.png" alt="演示总览：时域 / 包络谱 / 健康度四联图">
+        <div class="cap">演示总览 · 时域 / 包络谱 / 健康度四联图（机理仿真信号）</div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px">诊断报文契约（冻结 · 单一事实源）</h3>
+        <p class="muted" style="font-size:14px">模型输出即事实源，字段一经冻结不得随意增删；10 必填 + 2 可选。</p>
+        <pre style="margin-top:16px"><code>{
+  <span class="k">"schema_version"</span>: <span class="s">"1.0"</span>,
+  <span class="k">"ts"</span>: <span class="s">"2026-10-05T16:22:58+08:00"</span>,
+  <span class="k">"device_id"</span>: <span class="s">"PMP-01 注水A泵"</span>,
+  <span class="k">"health_score"</span>: <span class="n">58</span>,
+  <span class="k">"fault_type"</span>: [<span class="s">"bearing_outer"</span>],
+  <span class="k">"confidence"</span>: <span class="n">0.84</span>,
+  <span class="k">"risk_level"</span>: <span class="s">"high"</span>,
+  <span class="k">"remaining_life_days"</span>: [<span class="n">7</span>, <span class="n">30</span>],
+  <span class="k">"key_evidence"</span>: [
+    {<span class="k">"metric"</span>:<span class="s">"bpfo_prom"</span>, <span class="k">"value"</span>:<span class="n">35.1</span>,
+     <span class="k">"baseline"</span>:<span class="n">2.3</span>, <span class="k">"deviation"</span>:<span class="n">14.3</span>,
+     <span class="k">"window"</span>:<span class="s">"1s窗"</span>, <span class="k">"unit"</span>:<span class="s">"×中位数"</span>}
+  ],
+  <span class="k">"suggestion_hint"</span>: <span class="s">"check_drive_end_bearing"</span>,
+  <span class="k">"model_version"</span>: <span class="s">"fluid_diag_rulebased_v0.1"</span>,
+  <span class="k">"degraded"</span>: <span class="n">false</span>
+}</code></pre>
+        <p class="dim" style="font-size:12.5px;margin-top:10px">完整规范见仓库 <code>docs/diagnosis-contract.md</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 技术选择 ================= -->
+<section id="tech" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow">技术选择说明</div>
+    <h2>为什么这么做</h2>
+    <p class="lead">每一个取舍，都是被现场条件逼出来的。</p>
+    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
+      <div class="card"><h3>机理规则先于深度学习</h3><p>现场真实失效样本稀缺（复现故障要停机），深度模型冷启动没数据；先用可解释规则 + 无监督检测顶上。</p></div>
+      <div class="card"><h3>包络谱峰「突出度」作核心判别器</h3><p>轴承缺陷呈<b>窄带</b>包络（峰极突出），汽蚀呈<b>宽带</b>（峰不突出）——只看总能量会把这俩混淆。</p></div>
+      <div class="card"><h3>只用 numpy（无 scipy / sklearn）</h3><p>边缘盒子上无重型依赖，特征维度 &lt;20，便于后续 INT8 量化上 NPU。</p></div>
+      <div class="card"><h3>仿真信号而非数据集</h3><p>零数据依赖、开箱即跑、可复现；同时体现「设备机理」这一壁垒。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 路线图 ================= -->
+<section id="road">
+  <div class="wrap">
+    <div class="eyebrow">路线图</div>
+    <h2>从一间实训室，走向流体设备工厂的边缘智能配套</h2>
+    <div class="road">
+      <div class="phase now">
+        <span class="st run">🚧 进行中</span>
+        <h3>一 · PoC 与展示</h3>
+        <p class="muted">机理仿真 → 诊断链路 → 契约报文。本仓库即此阶段成果。</p>
+      </div>
+      <div class="phase">
+        <span class="st plan">📋 规划中</span>
+        <h3>二 · 高校实训</h3>
+        <p class="muted">边缘计算实训室：样机箱 + 实验套件 + 课程 / 实验指导书。</p>
+      </div>
+      <div class="phase">
+        <span class="st plan">📋 规划中</span>
+        <h3>三 · 现场配套落地</h3>
+        <p class="muted">风机 / 水泵 / 压缩机现场验证 → 可报价的边缘盒子配套产品。</p>
+      </div>
+    </div>
+    <p class="dim" style="margin-top:20px;font-size:13.5px">阶段二、三尚无公开案例，将在首个现场验证完成后补充实测数据。</p>
+  </div>
+</section>
+
+<!-- ================= 边界 ================= -->
+<section id="boundary" style="padding-top:0">
+  <div class="wrap">
+    <div class="notice">
+      <h3>⚠️ 边界与声明</h3>
+      <ul>
+        <li><b>仿真数据</b>：本页/仓库用机理仿真的振动信号演示算法链路，<b>不能替代现场标定</b>；所有阈值为演示值，投产前必须用现场实测基线替换。</li>
+        <li><b>安全边界</b>：系统只做「预警 + 建议 + 辅助决策」，<b>不下发停机 / 切泵等控制指令</b>；硬保护回路由设备既有安全系统负责。</li>
+        <li><b>数据合规</b>：现场数据本地处理、不出场。</li>
+        <li><b>协议</b>：暂未指定开源协议（含商业资产，未经授权请勿商用）。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 合作 ================= -->
+<footer id="contact">
+  <div class="wrap">
+    <div class="foot">
+      <div class="col" style="max-width:420px">
+        <b>合作与共建</b>
+        面向 <b>高校共建（边缘计算实训室）</b> 与 <b>设备厂 / 终端用户（智能配套）</b>。<br>
+        有意向欢迎开 Issue，或直接联系项目维护者。
+      </div>
+      <div class="col">
+        <b>相关链接</b>
+        <a href="https://jeeftang.github.io/energy-calc-platform/">节能测算 Pro V2 · 工业节能测算平台</a><br>
+        <a href="https://github.com/JeefTang/fluid-edge-agent" target="_blank" rel="noopener">源码仓库（GitHub）</a>
+      </div>
+      <div class="col">
+        <b>联系</b>
+        唐先生 · 18041136555
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 流体设备边缘智能体 · Fluid Equipment Edge Agent</span>
+      <span>断网可用 · 数据不出场 · AI 只预警不下令</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
