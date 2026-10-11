@@ -220,6 +220,7 @@
     <div class="brand"><span class="dot"></span><span>流体设备边缘智能体<small>FLUID EQUIPMENT EDGE AGENT</small></span></div>
     <nav class="links">
       <a href="#value">价值</a>
+      <a href="#proof">工程实证</a>
       <a href="#diff">差异化</a>
       <a href="#arch">架构</a>
       <a href="#vision">现场感知</a>
@@ -240,13 +241,14 @@
       <span class="badge b">AI 只预警不下令</span>
       <span class="badge b">监测 × 能耗 × 节能确权</span>
       <span class="badge">国产边缘盒子 · RK3576 · 6 TOPS NPU</span>
+      <span class="badge">源自流体机械现场工程实践</span>
     </div>
     <h1>让风机、水泵、压缩机<br><span class="grad">「会诊断、会省电、会说话」</span></h1>
     <p class="sub">
-      面向<b>泵、风机、压缩机</b>等流体机械的工业边缘智能配套：一台跑在设备现场的边缘计算盒子，
-      本地完成振动 / 电流 / 温度多信号采集与 AI 推理，实现<b>健康度监测、故障预警、能效分析、自然语言问答</b>。
-      不是通用边缘平台，也不是节能计算器——把「<b>设备机理 + 边缘推理 + 智能体编排</b>」三层串成可跑通的链路。<br>
-      更关键的是：它<b>不止于监测</b>——把<b>能耗显示</b>与<b>节能确权</b>接成闭环，让“省了多少”变成能上桌分成的数据。
+      我们干了十几年流体设备的<b>节能改造与运行诊断</b>——锅炉给水泵、矿井三泵房排水、干熄焦余热锅炉给水泵、锅炉风机……<b>方案都是踩着现场实测数据算出来的</b>。
+      现在把这套「<b>设备机理 + 现场经验</b>」装进一台放在设备旁边的边缘盒子：本地采集振动 / 电流 / 温度与压力流量，本地 AI 推理，
+      让设备自己<b>报健康、算能耗、说人话</b>。<br>
+      不是通用边缘平台，也不是节能计算器——<b>只做流体机械（泵 / 风机 / 压缩机）这一件事</b>。
     </p>
     <div class="cta">
       <a class="btn primary" href="#demo">▶ 看诊断演示</a>
@@ -254,10 +256,10 @@
     </div>
 
     <div class="stats">
-      <div class="stat"><div class="n">7 / 7</div><div class="l">典型工况诊断命中率（含汽蚀/松动）</div></div>
+      <div class="stat"><div class="n">7 / 7</div><div class="l">机理仿真 7 类典型工况 · 诊断全命中</div></div>
       <div class="stat"><div class="n">≤ 50 ms</div><div class="l">边缘侧推理时延（RKNN · INT8）</div></div>
       <div class="stat"><div class="n">14 类</div><div class="l">受控故障类型枚举</div></div>
-      <div class="stat"><div class="n">5 层</div><div class="l">接入→数据→AI→智能体→应用</div></div>
+      <div class="stat"><div class="n">4 +</div><div class="l">已交付的流体设备改造项目</div></div>
     </div>
   </div>
 </div>
@@ -266,30 +268,49 @@
 <section id="value">
   <div class="wrap">
     <div class="eyebrow">它解决什么问题</div>
-    <h2>流体设备 7×24 运行，痛点就三个</h2>
-    <p class="lead">电厂、矿山、化工、市政里，泵 / 风机 / 压缩机是能耗与停机的重灾区。我们从「设备侧」而不是「云侧」下手。</p>
+    <h2>泵、风机、压缩机 7×24 在转，痛点就三个</h2>
+    <p class="lead">电厂、矿山、化工、市政里，机泵常常<b>没有备机、串联在流程中间</b>——一次非计划停机的代价，远高于监测的投入。这套系统从<b>设备侧</b>下手，不是从云端。</p>
     <div class="grid3">
       <div class="card">
         <div class="ico">🛑</div>
         <h3>非计划停机</h3>
-        <p>振动 / 电流 / 温度多信号融合，输出健康度评分 + 故障类型预警，提前发现轴承、不平衡、不对中、松动等隐患。</p>
+        <p>振动 / 电流 / 温度多信号融合，输出<b>健康度评分 + 故障类型 + 风险等级</b>，提前发现轴承、不平衡、不对中、松动隐患——把「事后抢修」变成「提前检修」。</p>
       </div>
       <div class="card">
         <div class="ico">⚡</div>
-        <h3>能耗偏高</h3>
-        <p>工况识别 + 能效趋势分析，为节能改造提供数据底座，让「改不改、改多少」有实测依据。</p>
+        <h3>能耗说不清</h3>
+        <p>工况一变，能耗就说不清。做<b>工况识别 + 能效趋势 + 基线对比</b>，让「改不改、改多少」有实测依据，而不是拍脑袋。</p>
       </div>
       <div class="card">
         <div class="ico">🧰</div>
-        <h3>售后诊断靠人、响应慢</h3>
-        <p>设备侧边缘盒子本地推理，<b>断网可用</b>，现场自然语言问答，把老师傅经验变成 7×24 在线的「设备医生」。</p>
+        <h3>售后诊断靠人</h3>
+        <p>老师傅越来越少、厂家响应慢。边缘盒子本地推理、<b>断网可用</b>，现场问一句答一句，把经验沉淀成 7×24 在线的「设备医生」。</p>
       </div>
     </div>
     <div class="two" style="margin-top:26px">
-      <div class="card"><h3>对设备厂</h3><p>整机从「卖设备」升级为「卖设备 + 智能服务」，形成差异化卖点与后续服务收入。</p></div>
-      <div class="card"><h3>对终端用户</h3><p>减少非计划停机、降低能耗、售后诊断提速，现场数据本地处理、合规不出场。</p></div>
+      <div class="card"><h3>对设备厂</h3><p>整机从「卖设备」升级为「<b>卖设备 + 智能服务</b>」：出厂即带健康监测与能效报告，售后从「等故障」变成「提前告知」，服务可续费、可分成。</p></div>
+      <div class="card"><h3>对终端用户</h3><p><b>少停机、少耗电、少扯皮</b>：隐患提前发现、能耗有据可查、节能量可复核可存证，现场数据本地处理、合规不出场。</p></div>
     </div>
-    <p class="lead" style="margin-top:22px"><b class="muted">壁垒：</b>设备机理 + 真实失效数据 + 边缘推理——做「设备专用」，不做通用平台。</p>
+    <p class="lead" style="margin-top:22px"><b class="muted">壁垒：</b>设备机理 + 现场失效经验 + 边缘推理 + <b>与节能测算同口径的算法</b>——做「设备专用」，不做通用平台。</p>
+  </div>
+</section>
+
+<!-- ================= 工程实证 ================= -->
+<section id="proof" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow">工程实证 · 我们不是从算法开始的</div>
+    <h2>这套算法的底子，是交付过的现场</h2>
+    <p class="lead">
+      把 AI 装进盒子之前，我们已经在流体设备的<b>改造与运行诊断</b>上交付过真实项目，节电率与回收期都经过业主验收。
+      盒子里的能效算法，与这些方案<b>同口径</b>——同一把尺子，您可以现场复核。
+    </p>
+    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
+      <div class="card"><h3>矿井三泵房排水系统</h3><p>柱塞泵替代多级离心泵，<b>节电率约 25%，回收期约 2.2 年</b>（含安装调试与运维口径）。</p></div>
+      <div class="card"><h3>电厂干熄焦余热锅炉给水泵</h3><p>实测输入功率 602.3 kW、无变频工况下，<b>节电率 26.7%，年省 45 万元、回收 3.19 年</b>。</p></div>
+      <div class="card"><h3>自备电厂 9 台锅炉风机</h3><p>送 / 引 / 一次风机年耗电 1848 万 kWh；高效叶轮改造，<b>节电率 10%（保守口径）</b>。</p></div>
+      <div class="card"><h3>锅炉给水泵群（130T / 160T）</h3><p>年节电 194.6 万 kWh；EMC 模式下资方 5 年净收益 262.6 万元。</p></div>
+    </div>
+    <p class="dim" style="margin-top:20px;font-size:13px">以上为脱敏后的项目结论（客户信息已隐去）；数字口径与《节能测算平台》一致，可现场复核。</p>
   </div>
 </section>
 
@@ -399,7 +420,7 @@
   <div class="wrap">
     <div class="eyebrow">现场感知 · 看得到 + 听得到</div>
     <h2>摄像头看外观，麦克风听声音</h2>
-    <p class="lead">云端方案看不到现场、也听不到现场。边缘盒子就在设备旁边：<b>视频看设备外观</b>（跑冒滴漏 / 振动位移 / 防护异常），<b>声学听运转声音</b>（汽蚀 / 轴承异响 / 气动噪声）——两路本地融合，判断设备是否<b>安全运转</b>。</p>
+    <p class="lead">云端方案看不到现场、也听不到现场。边缘盒子就装在设备旁边：<b>视频看外观</b>（跑冒滴漏 / 振动位移 / 防护异常），<b>声学听运转</b>（汽蚀 / 轴承异响 / 气动噪声）——两路本地融合，判断设备是否<b>安全运转</b>。这套判断规则，来自我们在矿井、电厂、化工厂设备旁的现场积累。</p>
 
     <div class="vision">
       <div class="cam">
@@ -582,12 +603,13 @@
   <div class="wrap">
     <div class="eyebrow">技术选择说明</div>
     <h2>为什么这么做</h2>
-    <p class="lead">每一个取舍，都是被现场条件逼出来的。</p>
+    <p class="lead">每一个取舍，都是被现场条件逼出来的——<b>先算清楚，再谈智能</b>。</p>
     <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
       <div class="card"><h3>机理规则先于深度学习</h3><p>现场真实失效样本稀缺（复现故障要停机），深度模型冷启动没数据；先用可解释规则 + 无监督检测顶上。</p></div>
       <div class="card"><h3>包络谱峰「突出度」作核心判别器</h3><p>轴承缺陷呈<b>窄带</b>包络（峰极突出），汽蚀呈<b>宽带</b>（峰不突出）——只看总能量会把这俩混淆。</p></div>
       <div class="card"><h3>只用 numpy（无 scipy / sklearn）</h3><p>边缘盒子上无重型依赖，特征维度 &lt;20，便于后续 INT8 量化上 NPU。</p></div>
       <div class="card"><h3>仿真信号而非数据集</h3><p>零数据依赖、开箱即跑、可复现；同时体现「设备机理」这一壁垒。</p></div>
+      <div class="card" style="border-color:rgba(34,211,238,.4)"><h3>先算清楚，再谈智能</h3><p>能效与节能量算法和《节能测算平台》共用一套口径，客户可以拿同一把尺子复核；<b>口径不一致的「智能」，我们不做</b>。</p></div>
     </div>
   </div>
 </section>
@@ -596,7 +618,7 @@
 <section id="boundary" style="padding-top:0">
   <div class="wrap">
     <div class="notice">
-      <h3>⚠️ 边界与声明</h3>
+      <h3>⚠️ 边界与声明 · 我们敢把界限写在这</h3>
       <ul>
         <li><b>仿真数据</b>：本页/仓库用机理仿真的振动信号演示算法链路，<b>不能替代现场标定</b>；所有阈值为演示值，投产前必须用现场实测基线替换。</li>
         <li><b>安全边界</b>：系统只做「预警 + 建议 + 辅助决策」，<b>不下发停机 / 切泵等控制指令</b>；硬保护回路由设备既有安全系统负责。</li>
@@ -614,7 +636,8 @@
       <div class="col" style="max-width:420px">
         <b>合作与共建</b>
         面向 <b>高校共建（边缘计算实训室）</b> 与 <b>设备厂 / 终端用户（智能配套）</b>。<br>
-        有意向欢迎开 Issue，或直接联系项目维护者。
+        建议路径：<b>先选一台最怕停的设备跑 4~8 周 PoC</b> → 出一份《设备健康与能耗对比报告》 → 再谈规模。<br>
+        有意向欢迎直接联系项目维护者。
       </div>
       <div class="col">
         <b>相关平台</b>
