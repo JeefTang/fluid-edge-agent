@@ -1,0 +1,36 @@
+{
+  "schema_version": "1.0",
+  "ts": "2026-10-11T18:58:40+08:00",
+  "device_id": "PMP-01 注水A泵",
+  "health_score": 58,
+  "fault_type": [
+    "bearing_outer"
+  ],
+  "confidence": 0.84,
+  "risk_level": "high",
+  "remaining_life_days": [
+    7,
+    30
+  ],
+  "key_evidence": [
+    {
+      "metric": "bpfo_prom",
+      "value": 35.129,
+      "baseline": 2.649,
+      "deviation": 12.259,
+      "window": "1s窗",
+      "unit": "×中位数"
+    },
+    {
+      "metric": "kurtosis",
+      "value": 2.217,
+      "baseline": 1.678,
+      "deviation": 0.321,
+      "window": "1s窗",
+      "unit": "-"
+    }
+  ],
+  "suggestion_hint": "check_drive_end_bearing",
+  "model_version": "fluid_diag_rulebased_v0.1",
+  "degraded": false
+}
