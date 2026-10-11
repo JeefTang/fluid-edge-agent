@@ -137,6 +137,34 @@
   .foot .col b{color:var(--text);display:block;margin-bottom:8px;font-size:13.5px}
   .foot a:hover{color:var(--cyan)}
   .copy{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
+
+  /* ---------- dashboard ---------- */
+  .dash{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:center;margin-top:36px}
+  @media(max-width:900px){.dash{grid-template-columns:1fr;gap:24px}}
+  .gauge-wrap{position:relative;width:100%;max-width:400px;margin:0 auto;aspect-ratio:1/1}
+  .gauge-wrap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 26px rgba(34,211,238,.14))}
+  .gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+  .gauge-center .val{font-size:clamp(38px,4.6vw,50px);font-weight:900;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .gauge-center .unit{font-size:13.5px;color:var(--muted);margin-top:8px;letter-spacing:.02em}
+  .gauge-center .st{margin-top:16px;font-size:12.5px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:7px}
+  .gauge-center .st i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .mintick{font-size:11.5px;fill:var(--dim)}
+  .ctrl-card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:24px}
+  .ctl{margin-bottom:17px}
+  .ctl label{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);margin-bottom:8px}
+  .ctl label b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:700}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));cursor:pointer;box-shadow:0 0 10px rgba(34,211,238,.55)}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border:0;border-radius:50%;background:#22d3ee;cursor:pointer}
+  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
+  @media(max-width:520px){.readouts{grid-template-columns:1fr}}
+  .ro{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
+  .ro .n{font-size:18.5px;font-weight:800;font-variant-numeric:tabular-nums}
+  .ro .l{font-size:12px;color:var(--muted);margin-top:3px}
+  .ro .n.c{color:var(--cyan)} .ro .n.g{color:var(--green)} .ro .n.a{color:var(--amber)}
+  .effbar{height:7px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:10px}
+  .effbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
 </style>
 </head>
 <body>
@@ -148,6 +176,7 @@
       <a href="#value">价值</a>
       <a href="#arch">架构</a>
       <a href="#demo">诊断演示</a>
+      <a href="#power">功耗仪表盘</a>
       <a href="#tech">技术选择</a>
       <a href="#road">路线图</a>
       <a href="#contact">合作</a>
@@ -315,6 +344,78 @@
   </div>
 </section>
 
+<!-- ================= 功耗仪表盘 ================= -->
+<section id="power" style="background:var(--bg2)">
+  <div class="wrap">
+    <div class="eyebrow">设备稳态运行 · 能耗可视化</div>
+    <h2>实际功耗仪表盘</h2>
+    <p class="lead">
+      设备进入<b>稳态运行</b>后，边缘盒子按秒级采集电流 / 母线电压 / 转速，实时折算<b>实际输入功率（实际功耗）</b>，
+      并与额定、基线、历史工况对比。<b>拖动下方参数即可实时联动演示。</b>
+    </p>
+
+    <div class="dash">
+      <div class="gauge-wrap">
+        <svg viewBox="0 0 220 220" aria-hidden="true">
+          <defs>
+            <linearGradient id="gv" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#34d399"/>
+            </linearGradient>
+          </defs>
+          <circle cx="110" cy="110" r="88" fill="none" stroke="#1e2c47" stroke-width="15"
+                  stroke-linecap="round" stroke-dasharray="414.7 552.9" transform="rotate(135 110 110)"/>
+          <circle id="gArc" cx="110" cy="110" r="88" fill="none" stroke="url(#gv)" stroke-width="15"
+                  stroke-linecap="round" stroke-dasharray="0 552.9" transform="rotate(135 110 110)"
+                  style="transition:stroke-dasharray .35s cubic-bezier(.4,0,.2,1)"/>
+          <text class="mintick" x="44" y="198" text-anchor="middle">0</text>
+          <text class="mintick" id="gMax" x="176" y="198" text-anchor="middle">100</text>
+        </svg>
+        <div class="gauge-center">
+          <div class="val" id="gVal">0.0</div>
+          <div class="unit">kW · 实际功耗</div>
+          <div class="st"><i></i>稳态运行</div>
+        </div>
+      </div>
+
+      <div class="ctrl-card">
+        <div class="ctl">
+          <label>流量 Q <b><span id="lQ">120</span> m³/h</b></label>
+          <input type="range" id="pQ" min="10" max="500" step="1" value="120">
+        </div>
+        <div class="ctl">
+          <label>扬程 H <b><span id="lH">100</span> m</b></label>
+          <input type="range" id="pH" min="10" max="400" step="1" value="100">
+        </div>
+        <div class="ctl">
+          <label>泵效率 η <b><span id="lE">75</span> %</b></label>
+          <input type="range" id="pE" min="40" max="92" step="1" value="75">
+        </div>
+        <div class="ctl" style="margin-bottom:4px">
+          <label>年运行小时 <b><span id="lHr">8000</span> h</b></label>
+          <input type="range" id="pHr" min="1000" max="8760" step="50" value="8000">
+        </div>
+        <div class="readouts">
+          <div class="ro"><div class="n c" id="roAxis">0.0 kW</div><div class="l">轴功率</div></div>
+          <div class="ro"><div class="n g" id="roIn">0.0 kW</div><div class="l">实际功耗（输入）</div></div>
+          <div class="ro"><div class="n" id="roKwh">0.0 万kWh</div><div class="l">年耗电量</div></div>
+          <div class="ro"><div class="n a" id="roCost">0.0 万元</div><div class="l">年电费（0.6 元/kWh）</div></div>
+        </div>
+        <div style="margin-top:18px">
+          <label style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:2px">
+            <span>能效状态</span><b id="roEff" style="color:var(--text)">—</b>
+          </label>
+          <div class="effbar"><i id="effBar"></i></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="dim" style="margin-top:22px;font-size:13px">
+      ⚠️ 演示数据：参数为示意值，算法与「节能测算平台」一致（轴功率法，已含电机效率 95% 折算为输入功率）；
+      现场实际功耗须以电表 / 采集器实测标定为准。
+    </p>
+  </div>
+</section>
+
 <!-- ================= 技术选择 ================= -->
 <section id="tech" style="background:var(--bg2)">
   <div class="wrap">
@@ -396,6 +497,41 @@
     </div>
   </div>
 </footer>
+
+<script>
+(function(){
+  var C = 2*Math.PI*88, ARC = 0.75*C;        // 270° 弧
+  var id = function(x){ return document.getElementById(x); };
+  var q=id('pQ'), h=id('pH'), e=id('pE'), hr=id('pHr');
+  var PRICE = 0.6, ETA_MOTOR = 0.95;
+  var NICE = [20,25,30,40,50,60,80,100,120,150,200,250,300,400,500,600,800,1000,1500,2000];
+  function niceMax(v){ for(var i=0;i<NICE.length;i++){ if(NICE[i]>=v) return NICE[i]; } return 2000; }
+  function f(x,d){ var p=Math.pow(10,d); return (Math.round(x*p)/p).toFixed(d); }
+  function calc(){
+    var Q=+q.value, H=+h.value, ef=+e.value/100, hours=+hr.value;
+    var pAxis = Q*H/(367*ef);              // 轴功率 kW（Q m³/h, H m）
+    var pIn   = pAxis/ETA_MOTOR;           // 实际功耗 = 输入功率 kW
+    var kwh   = pIn*hours/10000;           // 万 kWh/年
+    var cost  = pIn*hours*PRICE/10000;     // 万元/年
+    var max   = niceMax(pIn*1.55);
+    var pct   = Math.min(1, pIn/max);
+    id('gArc').setAttribute('stroke-dasharray', (pct*ARC).toFixed(1)+' '+C.toFixed(1));
+    id('gMax').textContent = max;
+    id('gVal').textContent = f(pIn,1);
+    id('lQ').textContent = Q; id('lH').textContent = H;
+    id('lE').textContent = e.value; id('lHr').textContent = hours;
+    id('roAxis').textContent = f(pAxis,1)+' kW';
+    id('roIn').textContent   = f(pIn,1)+' kW';
+    id('roKwh').textContent  = f(kwh,1)+' 万kWh';
+    id('roCost').textContent = f(cost,1)+' 万元';
+    var lvl = ef>=0.85?'优':(ef>=0.7?'良':'偏低');
+    id('roEff').textContent = lvl+'（'+Math.round(ef*100)+'%）';
+    id('effBar').style.width = Math.round(Math.min(1, ef/0.9)*100)+'%';
+  }
+  [q,h,e,hr].forEach(function(s){ s.addEventListener('input', calc); });
+  calc();
+})();
+</script>
 
 </body>
 </html>
