@@ -165,6 +165,19 @@
   .ro .n.c{color:var(--cyan)} .ro .n.g{color:var(--green)} .ro .n.a{color:var(--amber)}
   .effbar{height:7px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:10px}
   .effbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
+
+  /* ---------- diff ---------- */
+  .steps{counter-reset:s;margin:0;padding:0;list-style:none}
+  .steps li{counter-increment:s;position:relative;padding:9px 0 9px 44px;font-size:14.5px;color:var(--muted);border-bottom:1px dashed var(--line)}
+  .steps li:last-child{border-bottom:none}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:27px;height:27px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:800;color:#04121c;background:linear-gradient(135deg,var(--cyan),var(--blue))}
+  .steps li b{color:var(--text)}
+  ul.why{list-style:none;margin:0;padding:0}
+  ul.why li{position:relative;padding:10px 0 10px 24px;font-size:14.5px;color:var(--muted);border-bottom:1px dashed var(--line)}
+  ul.why li:last-child{border-bottom:none}
+  ul.why li::before{content:"▸";position:absolute;left:2px;top:9px;color:var(--cyan);font-weight:800}
+  ul.why li b{color:var(--text)}
+  .punch{margin-top:24px;font-size:17px;font-weight:800;color:var(--text);border-left:3px solid var(--cyan);padding-left:15px;line-height:1.6}
 </style>
 </head>
 <body>
@@ -174,6 +187,7 @@
     <div class="brand"><span class="dot"></span><span>流体设备边缘智能体<small>FLUID EQUIPMENT EDGE AGENT</small></span></div>
     <nav class="links">
       <a href="#value">价值</a>
+      <a href="#diff">差异化</a>
       <a href="#arch">架构</a>
       <a href="#demo">诊断演示</a>
       <a href="#power">功耗仪表盘</a>
@@ -191,13 +205,15 @@
       <span class="badge g">断网可用</span>
       <span class="badge g">数据不出场</span>
       <span class="badge b">AI 只预警不下令</span>
+      <span class="badge b">监测 × 能耗 × 节能确权</span>
       <span class="badge">国产边缘盒子 · RK3576 · 6 TOPS NPU</span>
     </div>
     <h1>让风机、水泵、压缩机<br><span class="grad">「会诊断、会省电、会说话」</span></h1>
     <p class="sub">
       面向<b>泵、风机、压缩机</b>等流体机械的工业边缘智能配套：一台跑在设备现场的边缘计算盒子，
       本地完成振动 / 电流 / 温度多信号采集与 AI 推理，实现<b>健康度监测、故障预警、能效分析、自然语言问答</b>。
-      不是通用边缘平台，也不是节能计算器——把「<b>设备机理 + 边缘推理 + 智能体编排</b>」三层串成可跑通的链路。
+      不是通用边缘平台，也不是节能计算器——把「<b>设备机理 + 边缘推理 + 智能体编排</b>」三层串成可跑通的链路。<br>
+      更关键的是：它<b>不止于监测</b>——把<b>能耗显示</b>与<b>节能确权</b>接成闭环，让“省了多少”变成能上桌分成的数据。
     </p>
     <div class="cta">
       <a class="btn primary" href="#demo">▶ 看诊断演示</a>
@@ -241,6 +257,57 @@
       <div class="card"><h3>对终端用户</h3><p>减少非计划停机、降低能耗、售后诊断提速，现场数据本地处理、合规不出场。</p></div>
     </div>
     <p class="lead" style="margin-top:22px"><b class="muted">壁垒：</b>设备机理 + 真实失效数据 + 边缘推理——做「设备专用」，不做通用平台。</p>
+  </div>
+</section>
+
+<!-- ================= 差异化 ================= -->
+<section id="diff">
+  <div class="wrap">
+    <div class="eyebrow">差异化定位</div>
+    <h2>状态监测 × 能耗显示 × 节能确权</h2>
+    <p class="lead">
+      市面上的「状态监测工业智能体」已经很多，但大多<b>止步于报警与健康度</b>。
+      真正稀缺的，是把<b>能耗</b>和<b>节能确权</b>接成一条闭环——这，就是我们的差异化。
+    </p>
+
+    <div class="grid3">
+      <div class="card">
+        <div class="ico">🩺</div>
+        <h3>① 状态监测</h3>
+        <p>振动 / 电流 / 温度多信号 → 健康度评分、故障类型、剩余寿命。别人有的，我们也有，是能力基石。</p>
+      </div>
+      <div class="card">
+        <div class="ico">⚡</div>
+        <h3>② 能耗显示</h3>
+        <p>稳态实际功耗、能效趋势、与基线逐时对比。我们的老本行，算法与「节能测算平台」同口径。</p>
+      </div>
+      <div class="card" style="border-color:rgba(34,211,238,.5);background:linear-gradient(180deg,rgba(34,211,238,.07),var(--panel2))">
+        <div class="ico">🔐</div>
+        <h3>③ 节能确权 <span style="font-size:12px;color:var(--cyan);font-weight:700">·差异化</span></h3>
+        <p>基线管理 + 工况归一 + 节能量核算 + 可审计证据链。为 <b>EMC 分成、碳核算、节能审计</b>提供“说得清”的数据。</p>
+      </div>
+    </div>
+
+    <div class="two" style="margin-top:26px;align-items:stretch">
+      <div class="card">
+        <h3 style="margin-bottom:10px">节能确权怎么做</h3>
+        <ol class="steps">
+          <li><b>建基线</b>：沉浀稳态工况库，形成可比对的能耗基线。</li>
+          <li><b>工况归一</b>：把能耗折算到统一工况，排除产量 / 工况波动干扰。</li>
+          <li><b>算节能</b>：实测输入功率 vs 基线，逐时 / 逐日核算节电量与节约金额。</li>
+          <li><b>存证</b>：带时间戳的本地记录，可导出审计报表 → 直接服务分成与碳核算。</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:10px">为什么这个组合稀缺</h3>
+        <ul class="why">
+          <li>做<b>状态监测</b>的，多半不懂节能算法与 EMC 结算——“省了多少”算不明白；</li>
+          <li>做<b>节能改造</b>的，多半没有设备侧数据采集——节能量靠估算，工况一变就扯皮；</li>
+          <li>我们<b>两头都在</b>：设备机理 + 轴功率算法（与测算平台同口径）+ 边缘本地采集。把“省了多少”变成<b>可复核、可存证、可分成</b>的数据。</li>
+        </ul>
+        <p class="punch">把设备健康和节能量，都变成能上桌分成的数据。</p>
+      </div>
+    </div>
   </div>
 </section>
 
