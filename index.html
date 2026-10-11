@@ -115,15 +115,6 @@
   .shot img{display:block;width:100%;height:auto}
   .shot .cap{font-size:12.5px;color:var(--dim);padding:10px 14px;border-top:1px solid var(--line)}
 
-  /* ---------- timeline ---------- */
-  .road{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
-  @media(max-width:900px){.road{grid-template-columns:1fr}}
-  .phase{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:22px;position:relative}
-  .phase.now{border-color:rgba(34,211,238,.5);box-shadow:0 0 0 1px rgba(34,211,238,.12) inset}
-  .phase .st{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;display:inline-block;margin-bottom:12px}
-  .st.run{background:rgba(34,211,238,.14);color:var(--cyan)}
-  .st.plan{background:rgba(148,163,184,.14);color:var(--muted)}
-
   /* ---------- notice ---------- */
   .notice{border:1px solid rgba(245,158,11,.35);background:linear-gradient(180deg,rgba(245,158,11,.07),transparent);border-radius:var(--radius);padding:24px;margin-top:26px}
   .notice h3{color:var(--amber)}
@@ -192,7 +183,6 @@
       <a href="#demo">诊断演示</a>
       <a href="#power">功耗仪表盘</a>
       <a href="#tech">技术选择</a>
-      <a href="#road">路线图</a>
       <a href="#contact">合作</a>
     </nav>
   </div>
@@ -379,34 +369,9 @@
 汽蚀           汽蚀             <span class="n">55</span>     high     <span class="s">✅</span>
 <span class="k">→ 命中率 7/7</span></code></pre>
 
-    <div class="two">
-      <div class="shot">
-        <img src="assets/demo_preview.png" alt="演示总览：时域 / 包络谱 / 健康度四联图">
-        <div class="cap">演示总览 · 时域 / 包络谱 / 健康度四联图（机理仿真信号）</div>
-      </div>
-      <div>
-        <h3 style="margin-bottom:10px">诊断报文契约（冻结 · 单一事实源）</h3>
-        <p class="muted" style="font-size:14px">模型输出即事实源，字段一经冻结不得随意增删；10 必填 + 2 可选。</p>
-        <pre style="margin-top:16px"><code>{
-  <span class="k">"schema_version"</span>: <span class="s">"1.0"</span>,
-  <span class="k">"ts"</span>: <span class="s">"2026-10-05T16:22:58+08:00"</span>,
-  <span class="k">"device_id"</span>: <span class="s">"PMP-01 注水A泵"</span>,
-  <span class="k">"health_score"</span>: <span class="n">58</span>,
-  <span class="k">"fault_type"</span>: [<span class="s">"bearing_outer"</span>],
-  <span class="k">"confidence"</span>: <span class="n">0.84</span>,
-  <span class="k">"risk_level"</span>: <span class="s">"high"</span>,
-  <span class="k">"remaining_life_days"</span>: [<span class="n">7</span>, <span class="n">30</span>],
-  <span class="k">"key_evidence"</span>: [
-    {<span class="k">"metric"</span>:<span class="s">"bpfo_prom"</span>, <span class="k">"value"</span>:<span class="n">35.1</span>,
-     <span class="k">"baseline"</span>:<span class="n">2.3</span>, <span class="k">"deviation"</span>:<span class="n">14.3</span>,
-     <span class="k">"window"</span>:<span class="s">"1s窗"</span>, <span class="k">"unit"</span>:<span class="s">"×中位数"</span>}
-  ],
-  <span class="k">"suggestion_hint"</span>: <span class="s">"check_drive_end_bearing"</span>,
-  <span class="k">"model_version"</span>: <span class="s">"fluid_diag_rulebased_v0.1"</span>,
-  <span class="k">"degraded"</span>: <span class="n">false</span>
-}</code></pre>
-        <p class="dim" style="font-size:12.5px;margin-top:10px">完整规范见仓库 <code>docs/diagnosis-contract.md</code></p>
-      </div>
+    <div class="shot" style="max-width:820px;margin:28px auto 0">
+      <img src="assets/demo_preview.png" alt="演示总览：时域 / 包络谱 / 健康度四联图">
+      <div class="cap">演示总览 · 时域 / 包络谱 / 健康度四联图（机理仿真信号）</div>
     </div>
   </div>
 </section>
@@ -495,32 +460,6 @@
       <div class="card"><h3>只用 numpy（无 scipy / sklearn）</h3><p>边缘盒子上无重型依赖，特征维度 &lt;20，便于后续 INT8 量化上 NPU。</p></div>
       <div class="card"><h3>仿真信号而非数据集</h3><p>零数据依赖、开箱即跑、可复现；同时体现「设备机理」这一壁垒。</p></div>
     </div>
-  </div>
-</section>
-
-<!-- ================= 路线图 ================= -->
-<section id="road">
-  <div class="wrap">
-    <div class="eyebrow">路线图</div>
-    <h2>从一间实训室，走向流体设备工厂的边缘智能配套</h2>
-    <div class="road">
-      <div class="phase now">
-        <span class="st run">🚧 进行中</span>
-        <h3>一 · PoC 与展示</h3>
-        <p class="muted">机理仿真 → 诊断链路 → 契约报文。本仓库即此阶段成果。</p>
-      </div>
-      <div class="phase">
-        <span class="st plan">📋 规划中</span>
-        <h3>二 · 高校实训</h3>
-        <p class="muted">边缘计算实训室：样机箱 + 实验套件 + 课程 / 实验指导书。</p>
-      </div>
-      <div class="phase">
-        <span class="st plan">📋 规划中</span>
-        <h3>三 · 现场配套落地</h3>
-        <p class="muted">风机 / 水泵 / 压缩机现场验证 → 可报价的边缘盒子配套产品。</p>
-      </div>
-    </div>
-    <p class="dim" style="margin-top:20px;font-size:13.5px">阶段二、三尚无公开案例，将在首个现场验证完成后补充实测数据。</p>
   </div>
 </section>
 
