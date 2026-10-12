@@ -227,7 +227,6 @@
       <a href="#vision">现场感知</a>
       <a href="#demo">诊断演示</a>
       <a href="#power">功耗仪表盘</a>
-      <a href="#tech">技术选择</a>
       <a href="#contact">合作</a>
     </nav>
   </div>
@@ -625,24 +624,8 @@
   </div>
 </section>
 
-<!-- ================= 技术选择 ================= -->
-<section id="tech" style="background:var(--bg2)">
-  <div class="wrap">
-    <div class="eyebrow">技术选择说明</div>
-    <h2>为什么这么做</h2>
-    <p class="lead">每一个取舍，都是被现场条件逼出来的——<b>先算清楚，再谈智能</b>。</p>
-    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
-      <div class="card"><h3>机理规则先于深度学习</h3><p>现场真实失效样本稀缺（复现故障要停机），深度模型冷启动没数据；先用可解释规则 + 无监督检测顶上。</p></div>
-      <div class="card"><h3>包络谱峰「突出度」作核心判别器</h3><p>轴承缺陷呈<b>窄带</b>包络（峰极突出），汽蚀呈<b>宽带</b>（峰不突出）——只看总能量会把这俩混淆。</p></div>
-      <div class="card"><h3>只用 numpy（无 scipy / sklearn）</h3><p>边缘盒子上无重型依赖，特征维度 &lt;20，便于后续 INT8 量化上 NPU。</p></div>
-      <div class="card"><h3>仿真信号而非数据集</h3><p>零数据依赖、开箱即跑、可复现；同时体现「设备机理」这一壁垒。</p></div>
-      <div class="card" style="border-color:rgba(34,211,238,.4)"><h3>先算清楚，再谈智能</h3><p>能效与节能量算法和《节能测算平台》共用一套口径，客户可以拿同一把尺子复核；<b>口径不一致的「智能」，我们不做</b>。</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- ================= 边界 ================= -->
-<section id="boundary" style="padding-top:0">
+<section id="boundary">
   <div class="wrap">
     <div class="notice">
       <h3>⚠️ 边界与声明 · 我们敢把界限写在这</h3>
