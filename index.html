@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>流体设备边缘智能体 · 让风机水泵压缩机「会诊断、会省电、会说话」</title>
-<meta name="description" content="流体设备边缘智能体（Fluid Equipment Edge Agent）：面向泵、风机、压缩机等流体机械的工业边缘智能配套。设备机理 + 边缘推理 + 智能体编排，跑在国产 RK3576 边缘盒子上，断网可用、数据不出场、AI 只预警不下令。">
+<title>流体设备边缘智能体 · 看板与机理仿真</title>
+<meta name="description" content="流体设备边缘智能体（Fluid Equipment Edge Agent）：面向泵、风机、压缩机的工业边缘智能配套。设备机理 + 边缘推理 + 智能体编排，跑在国产边缘盒子上，断网可用、数据不出场、AI 只预警不下令。">
 <style>
   :root{
     --bg:#080c16; --bg2:#0d1424; --panel:#111a2e; --panel2:#0f1728;
@@ -14,203 +14,186 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    background:var(--bg); color:var(--text);
+  body{background:var(--bg);color:var(--text);
     font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    line-height:1.7; -webkit-font-smoothing:antialiased; overflow-x:hidden;
-  }
+    line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   a{color:inherit;text-decoration:none}
   .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
-  section{padding:76px 0;position:relative}
-  .eyebrow{color:var(--cyan);font-size:13px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:12px}
-  h2{font-size:clamp(24px,3.4vw,34px);font-weight:800;letter-spacing:-.01em;margin-bottom:12px}
-  h3{font-size:18px;font-weight:700;margin-bottom:8px}
-  p.lead{color:var(--muted);font-size:16px;max-width:760px}
+  section{padding:58px 0;position:relative}
+  .eyebrow{color:var(--cyan);font-size:12.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+  h2{font-size:clamp(23px,3.2vw,31px);font-weight:800;letter-spacing:-.01em;margin-bottom:10px}
+  h3{font-size:17px;font-weight:700;margin-bottom:6px}
+  p.lead{color:var(--muted);font-size:15px;max-width:780px}
   .muted{color:var(--muted)} .dim{color:var(--dim)}
 
-  /* ---------- nav ---------- */
-  header.nav{position:sticky;top:0;z-index:50;background:rgba(8,12,22,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .nav-in{display:flex;align-items:center;justify-content:space-between;height:62px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.01em}
-  .brand .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 0 14px var(--cyan)}
-  .brand small{display:block;font-size:11px;color:var(--dim);font-weight:600;letter-spacing:.08em}
-  nav.links{display:flex;gap:26px;font-size:14px;color:var(--muted)}
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(8,12,22,.84);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+  .brand .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));box-shadow:0 0 14px var(--cyan)}
+  .brand small{display:block;font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.08em}
+  nav.links{display:flex;gap:24px;font-size:14px;color:var(--muted)}
   nav.links a:hover{color:var(--cyan)}
   @media(max-width:820px){nav.links{display:none}}
 
-  /* ---------- hero ---------- */
-  .hero{padding:88px 0 64px;position:relative;overflow:hidden}
-  .hero::before{content:"";position:absolute;inset:0;
-    background:
-      radial-gradient(900px 420px at 78% -10%, rgba(34,211,238,.16), transparent 60%),
+  /* hero */
+  .hero{padding:66px 0 44px;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-2;
+    background:radial-gradient(900px 420px at 78% -10%, rgba(34,211,238,.16), transparent 60%),
       radial-gradient(760px 420px at 8% 6%, rgba(59,130,246,.16), transparent 62%),
-      linear-gradient(180deg,var(--bg2),var(--bg));
-    z-index:-2}
+      linear-gradient(180deg,var(--bg2),var(--bg))}
   .hero::after{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;
     background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
     background-size:52px 52px;mask-image:radial-gradient(700px 420px at 50% 0%,#000,transparent 75%)}
-  .badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
-  .badge{border:1px solid var(--line);background:rgba(34,211,238,.06);color:var(--cyan);
-    font-size:12.5px;font-weight:700;padding:5px 12px;border-radius:999px}
+  .badge-row{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:18px}
+  .badge{border:1px solid var(--line);background:rgba(34,211,238,.06);color:var(--cyan);font-size:12px;font-weight:700;padding:4px 11px;border-radius:999px}
   .badge.g{color:var(--green);background:rgba(52,211,153,.07)}
-  .badge.b{color:#7dd3fc;background:rgba(59,130,246,.08)}
-  h1{font-size:clamp(32px,5.2vw,54px);line-height:1.15;font-weight:900;letter-spacing:-.02em;margin-bottom:18px}
+  h1{font-size:clamp(30px,4.8vw,48px);line-height:1.15;font-weight:900;letter-spacing:-.02em;margin-bottom:14px}
   h1 .grad{background:linear-gradient(120deg,var(--cyan),var(--blue) 60%,var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p.sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);max-width:740px;margin-bottom:30px}
-  .cta{display:flex;flex-wrap:wrap;gap:14px}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-weight:700;font-size:14.5px;border:1px solid transparent;transition:.18s}
+  .hero p.sub{font-size:clamp(14.5px,1.5vw,17px);color:var(--muted);max-width:720px;margin-bottom:24px}
+  .cta{display:flex;flex-wrap:wrap;gap:12px}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:700;font-size:14px;border:1px solid transparent;transition:.18s}
   .btn.primary{background:linear-gradient(135deg,var(--cyan),var(--blue));color:#04121c}
   .btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(34,211,238,.28)}
   .btn.ghost{border-color:var(--line);color:var(--text);background:rgba(255,255,255,.02)}
   .btn.ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+  @media(max-width:820px){.stats{grid-template-columns:1fr}}
+  .stat{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;align-items:baseline;gap:10px}
+  .stat .n{font-size:21px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+  .stat .l{font-size:12.5px;color:var(--muted)}
 
-  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:46px}
-  @media(max-width:820px){.stats{grid-template-columns:repeat(2,1fr)}}
-  .stat{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:18px 18px}
-  .stat .n{font-size:26px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .stat .l{font-size:12.5px;color:var(--muted);margin-top:4px}
+  /* panel base */
+  .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius)}
+  .pn-h{display:flex;align-items:baseline;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+  .pn-h .hint{font-size:11.5px;color:var(--dim);font-weight:600;font-variant-numeric:tabular-nums}
 
-  /* ---------- cards ---------- */
-  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
-  @media(max-width:900px){.grid3{grid-template-columns:1fr}}
-  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:24px;transition:.2s}
-  .card:hover{border-color:rgba(34,211,238,.45);transform:translateY(-3px)}
-  .card .ico{font-size:22px;margin-bottom:10px}
-  .card p{color:var(--muted);font-size:14.5px}
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+  .chip-btn{cursor:pointer;font:inherit;font-size:13px;font-weight:700;color:var(--muted);
+    background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:999px;padding:7px 15px;transition:.16s}
+  .chip-btn:hover{border-color:rgba(34,211,238,.5);color:var(--text)}
+  .chip-btn.on{background:linear-gradient(135deg,rgba(34,211,238,.18),rgba(59,130,246,.14));border-color:var(--cyan);color:#c9f8ff}
 
-  /* ---------- arch ---------- */
-  .arch{display:flex;flex-direction:column;gap:12px;margin-top:34px}
-  .layer{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center;
-    background:linear-gradient(90deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:16px 18px}
-  @media(max-width:760px){.layer{grid-template-columns:1fr;gap:8px;text-align:left}}
-  .layer .tag{font-weight:800;font-size:14px;display:flex;align-items:center;gap:8px}
-  .layer .tag i{width:8px;height:8px;border-radius:50%;background:var(--cyan);flex:none}
-  .layer .body{display:flex;flex-wrap:wrap;gap:8px}
-  .chip{font-size:12.5px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.02);padding:5px 11px;border-radius:8px}
-  .layer.ai{border-color:rgba(34,211,238,.4);background:linear-gradient(90deg,rgba(34,211,238,.08),var(--panel2))}
-  .layer.ai .tag i{background:var(--green);box-shadow:0 0 10px var(--green)}
-  .arrow{align-self:center;color:var(--dim);font-size:13px;text-align:center;margin:-4px 0}
-
-  /* ---------- table ---------- */
-  .tbl{width:100%;border-collapse:collapse;margin-top:26px;font-size:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-  .tbl th,.tbl td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line)}
-  .tbl th{background:rgba(34,211,238,.07);color:var(--cyan);font-size:12.5px;letter-spacing:.06em;font-weight:700}
-  .tbl tr:last-child td{border-bottom:none}
-  .tbl tr:hover td{background:rgba(255,255,255,.02)}
-  .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px}
+  /* board */
+  .kpis{display:grid;grid-template-columns:1.05fr 1.25fr .95fr 1.5fr;gap:12px;margin-top:20px}
+  @media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}}
+  .kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center}
+  .kpi .kt{font-size:11.5px;color:var(--dim);font-weight:700;letter-spacing:.04em}
+  .kpi .kv{font-size:17px;font-weight:800;margin-top:5px;line-height:1.35}
+  .kpi .kv.sm{font-size:14px;font-weight:700;color:var(--muted)}
+  .krow{display:flex;align-items:center;gap:10px;margin-top:4px}
+  .ring{width:52px;height:52px;flex:none}
+  .knum{font-size:30px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+  .knl{font-size:12px;color:var(--dim)}
+  .pill{display:inline-block;font-size:12.5px;font-weight:800;padding:3px 11px;border-radius:999px}
   .pill.normal{background:rgba(52,211,153,.14);color:var(--green)}
-  .pill.high{background:rgba(248,113,113,.14);color:var(--red)}
   .pill.medium{background:rgba(245,158,11,.15);color:var(--amber)}
-  .ok{color:var(--green);font-weight:800}
-  .hit{display:inline-flex;align-items:center;gap:8px;margin-top:16px;font-size:14px;color:var(--green);font-weight:700}
+  .pill.high{background:rgba(248,113,113,.14);color:var(--red)}
 
-  /* ---------- code ---------- */
-  pre{background:#060a13;border:1px solid var(--line);border-radius:14px;padding:20px;overflow:auto;font-size:13px;line-height:1.6;margin-top:22px}
-  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#c9d7f0}
-  .k{color:var(--cyan)} .s{color:#a5f3c4} .n{color:#fbbf24} .c{color:#5b6b88}
+  .plots{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
+  @media(max-width:900px){.plots{grid-template-columns:1fr}}
+  .plot canvas{display:block;width:100%;height:132px;background:#05080f;border-radius:0 0 var(--radius) var(--radius)}
 
-  .two{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start;margin-top:30px}
-  @media(max-width:900px){.two{grid-template-columns:1fr}}
-  .shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#060a13}
-  .shot img{display:block;width:100%;height:auto}
-  .shot .cap{font-size:12.5px;color:var(--dim);padding:10px 14px;border-top:1px solid var(--line)}
-
-  /* ---------- notice ---------- */
-  .notice{border:1px solid rgba(245,158,11,.35);background:linear-gradient(180deg,rgba(245,158,11,.07),transparent);border-radius:var(--radius);padding:24px;margin-top:26px}
-  .notice h3{color:var(--amber)}
-  .notice ul{margin:10px 0 0 18px;color:var(--muted);font-size:14.5px}
-  .notice li{margin:6px 0}
-
-  /* ---------- footer ---------- */
-  footer{border-top:1px solid var(--line);padding:44px 0;background:var(--bg2)}
-  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:22px;align-items:flex-start}
-  .foot .col{font-size:14px;color:var(--muted)}
-  .foot .col b{color:var(--text);display:block;margin-bottom:8px;font-size:13.5px}
-  .foot a:hover{color:var(--cyan)}
-  .copy{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--dim);display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between}
-
-  /* ---------- dashboard ---------- */
-  .dash{display:grid;grid-template-columns:400px 1fr;gap:32px;align-items:center;margin-top:36px}
-  @media(max-width:900px){.dash{grid-template-columns:1fr;gap:24px}}
-  .gauge-wrap{position:relative;width:100%;max-width:400px;margin:0 auto;aspect-ratio:1/1}
-  .gauge-wrap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 26px rgba(34,211,238,.14))}
-  .gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
-  .gauge-center .val{font-size:clamp(38px,4.6vw,50px);font-weight:900;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
-  .gauge-center .unit{font-size:13.5px;color:var(--muted);margin-top:8px;letter-spacing:.02em}
-  .gauge-center .st{margin-top:16px;font-size:12.5px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:7px}
-  .gauge-center .st i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .mintick{font-size:11.5px;fill:var(--dim)}
-  .ctrl-card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:24px}
-  .ctl{margin-bottom:17px}
-  .ctl label{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);margin-bottom:8px}
-  .ctl label b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:700}
-  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;background:var(--line);outline:none}
-  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:17px;height:17px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));cursor:pointer;box-shadow:0 0 10px rgba(34,211,238,.55)}
-  input[type=range]::-moz-range-thumb{width:17px;height:17px;border:0;border-radius:50%;background:#22d3ee;cursor:pointer}
-  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}
-  @media(max-width:520px){.readouts{grid-template-columns:1fr}}
-  .ro{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:13px 15px}
-  .ro .n{font-size:18.5px;font-weight:800;font-variant-numeric:tabular-nums}
-  .ro .l{font-size:12px;color:var(--muted);margin-top:3px}
-  .ro .n.c{color:var(--cyan)} .ro .n.g{color:var(--green)} .ro .n.a{color:var(--amber)}
-  .effbar{height:7px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:10px}
-  .effbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
-
-  /* ---------- diff ---------- */
-  .steps{counter-reset:s;margin:0;padding:0;list-style:none}
-  .steps li{counter-increment:s;position:relative;padding:9px 0 9px 44px;font-size:14.5px;color:var(--muted);border-bottom:1px dashed var(--line)}
-  .steps li:last-child{border-bottom:none}
-  .steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:27px;height:27px;border-radius:9px;display:grid;place-items:center;font-size:13px;font-weight:800;color:#04121c;background:linear-gradient(135deg,var(--cyan),var(--blue))}
-  .steps li b{color:var(--text)}
-  ul.why{list-style:none;margin:0;padding:0}
-  ul.why li{position:relative;padding:10px 0 10px 24px;font-size:14.5px;color:var(--muted);border-bottom:1px dashed var(--line)}
-  ul.why li:last-child{border-bottom:none}
-  ul.why li::before{content:"▸";position:absolute;left:2px;top:9px;color:var(--cyan);font-weight:800}
-  ul.why li b{color:var(--text)}
-  .punch{margin-top:24px;font-size:17px;font-weight:800;color:var(--text);border-left:3px solid var(--cyan);padding-left:15px;line-height:1.6}
-
-  /* ---------- vision ---------- */
-  .vision{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-top:34px;align-items:stretch}
-  @media(max-width:900px){.vision{grid-template-columns:1fr}}
-  .cam{position:relative;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#04070d;aspect-ratio:16/10}
+  /* sense row */
+  .sense{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:12px}
+  @media(max-width:900px){.sense{grid-template-columns:1fr}}
+  .cam{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#04070d;aspect-ratio:16/8.2}
   .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
   .cam svg.sim{position:absolute;inset:0;width:100%;height:100%;display:block}
   .cam .scan{position:absolute;left:0;right:0;height:34%;top:-34%;background:linear-gradient(180deg,transparent,rgba(34,211,238,.10),transparent);animation:scan 5.5s linear infinite;pointer-events:none}
   @keyframes scan{0%{top:-34%}100%{top:100%}}
   .cam .hud{position:absolute;inset:0;pointer-events:none;font-size:12px;color:#cfe8f5;text-shadow:0 1px 3px rgba(0,0,0,.85)}
-  .cam .hud .tl{position:absolute;top:11px;left:14px;letter-spacing:.02em}
+  .cam .hud .tl{position:absolute;top:10px;left:12px}
   .cam .hud .tl b{color:#fff}
-  .cam .hud .rec{position:absolute;top:11px;right:14px;color:#ff5b5b;font-weight:700;display:flex;align-items:center;gap:6px}
+  .cam .hud .rec{position:absolute;top:10px;right:12px;color:#ff5b5b;font-weight:700;display:flex;align-items:center;gap:6px}
   .cam .hud .rec i{width:8px;height:8px;border-radius:50%;background:#ff5b5b;box-shadow:0 0 8px #ff5b5b;animation:pulse 1.3s infinite}
-  .cam .hud .bot{position:absolute;left:14px;right:14px;bottom:12px;display:flex;gap:9px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
-  .cam .hud .bot span{background:rgba(4,10,20,.55);border:1px solid rgba(34,211,238,.25);border-radius:7px;padding:3px 9px;font-size:11.5px}
+  .cam .hud .bot{position:absolute;left:12px;right:12px;bottom:10px;display:flex;gap:8px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+  .cam .hud .bot span{background:rgba(4,10,20,.55);border:1px solid rgba(34,211,238,.25);border-radius:7px;padding:2px 8px;font-size:11px}
   .cam .hud .bot b{color:var(--cyan)}
-  .cam .bbox{position:absolute;left:13%;top:26%;width:72%;height:52%;border:1.6px solid var(--green);border-radius:6px;box-shadow:0 0 0 1px rgba(52,211,153,.25),0 0 22px rgba(52,211,153,.18)}
-  .cam .bbox .lb{position:absolute;top:-21px;left:-1px;background:var(--green);color:#04120c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px;white-space:nowrap}
-  .cam .corner{position:absolute;width:18px;height:18px;border:2px solid rgba(34,211,238,.5)}
-  .cam .c1{top:8px;left:8px;border-right:0;border-bottom:0}
-  .cam .c2{top:8px;right:8px;border-left:0;border-bottom:0}
-  .cam .c3{bottom:8px;left:8px;border-right:0;border-top:0}
-  .cam .c4{bottom:8px;right:8px;border-left:0;border-top:0}
+  .cam .bbox{position:absolute;left:13%;top:24%;width:72%;height:54%;border:1.6px solid var(--green);border-radius:6px;box-shadow:0 0 0 1px rgba(52,211,153,.25),0 0 22px rgba(52,211,153,.18)}
+  .cam .bbox .lb{position:absolute;top:-20px;left:-1px;background:var(--green);color:#04120c;font-size:11px;font-weight:800;padding:2px 8px;border-radius:5px;white-space:nowrap}
+  .cam .corner{position:absolute;width:16px;height:16px;border:2px solid rgba(34,211,238,.5)}
+  .cam .c1{top:7px;left:7px;border-right:0;border-bottom:0}
+  .cam .c2{top:7px;right:7px;border-left:0;border-bottom:0}
+  .cam .c3{bottom:7px;left:7px;border-right:0;border-top:0}
+  .cam .c4{bottom:7px;right:7px;border-left:0;border-top:0}
   .rot{transform-box:fill-box;transform-origin:center;animation:spin 1.15s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .vib{transform-box:fill-box;animation:vib .1s infinite}
-  @keyframes vib{0%,100%{transform:translate(0,0)}50%{transform:translate(.7px,-.6px)}}
-  .acoustic{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column}
-  .acoustic h3{display:flex;justify-content:space-between;align-items:baseline}
-  .acoustic #db{font-size:20px;color:var(--cyan);font-variant-numeric:tabular-nums}
-  .spec{width:100%;height:132px;margin-top:14px;border-radius:10px;background:#05080f;border:1px solid var(--line)}
-  .acoustic .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .atag{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
+  @keyframes vib{0%,100%{transform:translate(0,0)}50%{transform:translate(.6px,-.5px)}}
+  .acoustic{padding:0 16px 14px;display:flex;flex-direction:column}
+  .acoustic .ah{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 10px;font-size:13px;font-weight:700;border-bottom:1px solid var(--line)}
+  .acoustic #db{font-size:17px;color:var(--cyan);font-variant-numeric:tabular-nums;font-weight:800}
+  .spec{width:100%;height:112px;margin-top:12px;border-radius:10px;background:#05080f;border:1px solid var(--line)}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .atag{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
   .atag.ok{border-color:rgba(52,211,153,.4);color:var(--green)}
-  .verdict{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-top:22px}
+
+  .verdict{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-top:12px}
   @media(max-width:820px){.verdict{grid-template-columns:1fr}}
-  .vcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.02)}
-  .vcard .k{font-size:12.5px;color:var(--muted)}
-  .vcard .v{font-size:16px;font-weight:800;margin-top:4px}
+  .vcard{border:1px solid var(--line);border-radius:12px;padding:12px 15px;background:rgba(255,255,255,.02)}
+  .vcard .k{font-size:12px;color:var(--muted)}
+  .vcard .v{font-size:15.5px;font-weight:800;margin-top:3px}
   .vcard .v.ok{color:var(--green)}
   .vcard.total{border-color:rgba(52,211,153,.45);background:linear-gradient(180deg,rgba(52,211,153,.09),transparent)}
+
+  /* power dashboard */
+  .dash{display:grid;grid-template:auto / 340px 1fr;gap:26px;align-items:center;margin-top:26px}
+  @media(max-width:900px){.dash{grid-template-columns:1fr;gap:20px}}
+  .gauge-wrap{position:relative;width:100%;max-width:340px;margin:0 auto;aspect-ratio:1/1}
+  .gauge-wrap svg{width:100%;height:100%;display:block;filter:drop-shadow(0 8px 26px rgba(34,211,238,.14))}
+  .gauge-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+  .gauge-center .val{font-size:clamp(34px,4.2vw,46px);font-weight:900;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(120deg,var(--cyan),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .gauge-center .unit{font-size:13px;color:var(--muted);margin-top:6px}
+  .gauge-center .st{margin-top:12px;font-size:12px;font-weight:700;color:var(--green);display:flex;align-items:center;gap:7px}
+  .gauge-center .st i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .mintick{font-size:11.5px;fill:var(--dim)}
+  .ctrl-card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .ctl{margin-bottom:14px}
+  .ctl label{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:7px}
+  .ctl label b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:700}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:999px;background:var(--line);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),var(--blue));cursor:pointer;box-shadow:0 0 10px rgba(34,211,238,.55)}
+  input[type=range]::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:#22d3ee;cursor:pointer}
+  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  @media(max-width:520px){.readouts{grid-template-columns:1fr}}
+  .ro{background:rgba(255,255,255,.02);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+  .ro .n{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+  .ro .l{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .ro .n.c{color:var(--cyan)} .ro .n.g{color:var(--green)} .ro .n.a{color:var(--amber)}
+  .effbar{height:7px;border-radius:999px;background:var(--line);overflow:hidden;margin-top:9px}
+  .effbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--cyan));transition:width .3s}
+
+  /* why */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px}
+  @media(max-width:900px){.grid3{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius);padding:20px;transition:.2s}
+  .card:hover{border-color:rgba(34,211,238,.45);transform:translateY(-3px)}
+  .card .ico{font-size:20px;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:14px}
+  .card.hl{border-color:rgba(34,211,238,.5);background:linear-gradient(180deg,rgba(34,211,238,.07),var(--panel2))}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+  .flow .fc{font-size:12.5px;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.02);padding:6px 12px;border-radius:9px}
+  .flow .fc b{color:var(--text)}
+  .flow .ar{align-self:center;color:var(--dim);font-size:12px}
+  .punch{margin-top:20px;font-size:16px;font-weight:800;color:var(--text);border-left:3px solid var(--cyan);padding-left:14px;line-height:1.6}
+
+  /* notice */
+  .notice{border:1px solid rgba(245,158,11,.35);background:linear-gradient(180deg,rgba(245,158,11,.07),transparent);border-radius:var(--radius);padding:20px}
+  .notice h3{color:var(--amber);font-size:15px}
+  .notice ul{margin:8px 0 0 18px;color:var(--muted);font-size:13.5px}
+  .notice li{margin:4px 0}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:38px 0;background:var(--bg2)}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:flex-start}
+  .foot .col{font-size:13.5px;color:var(--muted);max-width:440px}
+  .foot .col b{color:var(--text);display:block;margin-bottom:6px;font-size:13px}
+  .foot a:hover{color:var(--cyan)}
+  .copy{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--dim);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+  code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;color:#c9d7f0;background:#060a13;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -219,14 +202,9 @@
   <div class="wrap nav-in">
     <div class="brand"><span class="dot"></span><span>流体设备边缘智能体<small>FLUID EQUIPMENT EDGE AGENT</small></span></div>
     <nav class="links">
-      <a href="#what">一分钟看懂</a>
-      <a href="#value">价值</a>
-      <a href="#proof">工程实证</a>
-      <a href="#diff">差异化</a>
-      <a href="#arch">架构</a>
-      <a href="#vision">现场感知</a>
-      <a href="#demo">诊断演示</a>
-      <a href="#power">功耗仪表盘</a>
+      <a href="#board">设备看板</a>
+      <a href="#power">能耗看板</a>
+      <a href="#why">定位与实证</a>
       <a href="#contact">合作</a>
     </nav>
   </div>
@@ -238,221 +216,64 @@
     <div class="badge-row">
       <span class="badge g">断网可用</span>
       <span class="badge g">数据不出场</span>
-      <span class="badge b">AI 只预警不下令</span>
-      <span class="badge">装在设备旁 · 只做泵 / 风机 / 压缩机</span>
+      <span class="badge">AI 只预警不下令</span>
     </div>
-    <h1>让风机、水泵、压缩机<br><span class="grad">「会诊断、会省电、会说话」</span></h1>
-    <p class="sub">
-      一台装在设备旁边的边缘盒子：本地采集、本地算，把设备的<b>健康、能耗和节能量</b>，直接说给您听。
-      <b>断网能用、数据不出场</b>——只做流体机械（泵 / 风机 / 压缩机）这一件事。
-    </p>
+    <h1>一台边缘盒子，让流体设备<br><span class="grad">「会诊断、会省电、会说话」</span></h1>
+    <p class="sub">装在泵 / 风机 / 压缩机旁边，本地采集、本地算——把设备的<b>健康、能耗和节能量</b>，直接说给您听。</p>
     <div class="cta">
-      <a class="btn primary" href="#demo">▶ 看诊断演示</a>
+      <a class="btn primary" href="#board">▶ 打开设备看板</a>
       <a class="btn ghost" href="#contact">合作与共建 →</a>
     </div>
-
     <div class="stats">
-      <div class="stat"><div class="n">7 / 7</div><div class="l">机理仿真 7 类典型工况 · 诊断全命中</div></div>
+      <div class="stat"><div class="n">7 / 7</div><div class="l">机理仿真 7 类工况 · 诊断全命中</div></div>
       <div class="stat"><div class="n">≤ 50 ms</div><div class="l">边缘侧推理时延（RKNN · INT8）</div></div>
-      <div class="stat"><div class="n">14 类</div><div class="l">受控故障类型枚举</div></div>
       <div class="stat"><div class="n">4 +</div><div class="l">已交付的流体设备改造项目</div></div>
     </div>
   </div>
 </div>
 
-<!-- ================= 一分钟看懂 ================= -->
-<section id="what">
+<!-- ================= 设备看板 · 机理仿真 ================= -->
+<section id="board">
   <div class="wrap">
-    <div class="eyebrow">一分钟看懂</div>
-    <h2>什么是工业边缘智能体？</h2>
-    <p class="lead">一句话：<b>装在设备旁的一台「边缘计算盒子」</b>——采集、计算、判断都在设备旁边完成，断网可用、数据不出场。</p>
-    <div class="grid3" style="grid-template-columns:repeat(2,1fr);margin-top:26px">
-      <div class="card">
-        <div class="ico">🧩</div>
-        <h3>是什么</h3>
-        <p>一台国产边缘计算盒子（RK3576 · NPU），装在泵 / 风机 / 压缩机旁边，把「<b>传感器采集 + 设备机理 + AI 推理</b>」集于一体，让设备自己能「说话」。</p>
-      </div>
-      <div class="card">
-        <div class="ico">🛠️</div>
-        <h3>能干什么</h3>
-        <p>① <b>健康诊断</b>：振动 / 温度 / 声音 → 故障类型 + 风险等级；② <b>能耗显示</b>：稳态实际功耗与能效趋势；③ <b>节能确权</b>：节能量可复核、可存证。</p>
-      </div>
-      <div class="card">
-        <div class="ico">💰</div>
-        <h3>带来什么价值</h3>
-        <p>对终端用户：<b>少停机、少耗电、少扯皮</b>；对设备厂：从「卖设备」升级为「<b>卖设备 + 智能服务</b>」，服务可续费、可分成。</p>
-      </div>
-      <div class="card">
-        <div class="ico">🔧</div>
-        <h3>怎么实现的</h3>
-        <p>传感器采集 → 边缘盒子<b>本地推理</b>（≤50 ms）→ 智能体翻译成人话（结论 / 依据 / 建议 / 风险）。<b>全程本地，数据不出场</b>。</p>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="eyebrow">设备看板 · 机理仿真</div>
+    <h2>选一个工况，看板立刻给出诊断</h2>
+    <p class="lead">振动、温度、电流、声音都在设备旁本地采集与推理，再翻译成「人话」。点下面任一工况，看板实时联动。</p>
 
-<!-- ================= 价值 ================= -->
-<section id="value">
-  <div class="wrap">
-    <div class="eyebrow">它解决什么问题</div>
-    <h2>泵、风机、压缩机 7×24 在转，痛点就三个</h2>
-    <p class="lead">机泵常<b>没有备机、又串联在流程中间</b>，一次非计划停机的代价，远高于监测的投入。这套系统从<b>设备侧</b>下手，不是从云端。</p>
-    <div class="grid3">
-      <div class="card">
-        <div class="ico">🛑</div>
-        <h3>非计划停机</h3>
-        <p>振动 / 电流 / 温度多信号融合，输出<b>健康度评分 + 故障类型 + 风险等级</b>，提前发现轴承、不平衡、不对中、松动隐患——把「事后抢修」变成「提前检修」。</p>
-      </div>
-      <div class="card">
-        <div class="ico">⚡</div>
-        <h3>能耗说不清</h3>
-        <p>工况一变，能耗就说不清。做<b>工况识别 + 能效趋势 + 基线对比</b>，让「改不改、改多少」有实测依据，而不是拍脑袋。</p>
-      </div>
-      <div class="card">
-        <div class="ico">🧰</div>
-        <h3>售后诊断靠人</h3>
-        <p>老师傅越来越少、厂家响应慢。边缘盒子本地推理、<b>断网可用</b>，现场问一句答一句，把经验沉淀成 7×24 在线的「设备医生」。</p>
-      </div>
-    </div>
-    <div class="two" style="margin-top:26px">
-      <div class="card"><h3>对设备厂</h3><p>整机从「卖设备」升级为「<b>卖设备 + 智能服务</b>」：出厂即带健康监测与能效报告，售后从「等故障」变成「提前告知」，服务可续费、可分成。</p></div>
-      <div class="card"><h3>对终端用户</h3><p><b>少停机、少耗电、少扯皮</b>：隐患提前发现、能耗有据可查、节能量可复核可存证，现场数据本地处理、合规不出场。</p></div>
-    </div>
-    <p class="lead" style="margin-top:22px"><b class="muted">壁垒：</b>设备机理 + 现场失效经验 + 边缘推理 + <b>与节能测算同口径的算法</b>——做「设备专用」，不做通用平台。</p>
-  </div>
-</section>
+    <div class="chips" id="conds"></div>
 
-<!-- ================= 工程实证 ================= -->
-<section id="proof" style="background:var(--bg2)">
-  <div class="wrap">
-    <div class="eyebrow">工程实证 · 我们不是从算法开始的</div>
-    <h2>这套算法的底子，是交付过的现场</h2>
-    <p class="lead">
-      装 AI 进盒子之前，我们已在流体设备的<b>改造与运行诊断</b>上交付过真实项目，节电率与回收期都经过业主验收。
-      盒子里的能效算法与之<b>同口径</b>——同一把尺子，可现场复核。
-    </p>
-    <div class="grid3" style="grid-template-columns:repeat(2,1fr)">
-      <div class="card"><h3>矿井三泵房排水系统</h3><p>柱塞泵替代多级离心泵，<b>节电率约 25%，回收期约 2.2 年</b>（含安装调试与运维口径）。</p></div>
-      <div class="card"><h3>电厂干熄焦余热锅炉给水泵</h3><p>实测输入功率 602.3 kW、无变频工况下，<b>节电率 26.7%，年省 45 万元、回收 3.19 年</b>。</p></div>
-      <div class="card"><h3>自备电厂 9 台锅炉风机</h3><p>送 / 引 / 一次风机年耗电 1848 万 kWh；高效叶轮改造，<b>节电率 10%（保守口径）</b>。</p></div>
-      <div class="card"><h3>锅炉给水泵群（130T / 160T）</h3><p>年节电 194.6 万 kWh；EMC 模式下资方 5 年净收益 262.6 万元。</p></div>
-    </div>
-    <p class="dim" style="margin-top:20px;font-size:13px">以上为脱敏后的项目结论（客户信息已隐去）；数字口径与《节能测算平台》一致，可现场复核。</p>
-  </div>
-</section>
-
-<!-- ================= 差异化 ================= -->
-<section id="diff">
-  <div class="wrap">
-    <div class="eyebrow">差异化定位</div>
-    <h2>状态监测 × 能耗显示 × 节能确权</h2>
-    <p class="lead">
-      市面上的「状态监测工业智能体」已经很多，但大多<b>止步于报警与健康度</b>。
-      真正稀缺的，是把<b>能耗</b>和<b>节能确权</b>接成一条闭环——这，就是我们的差异化。
-    </p>
-
-    <div class="grid3">
-      <div class="card">
-        <div class="ico">🩺</div>
-        <h3>① 状态监测</h3>
-        <p>振动 / 电流 / 温度多信号 → 健康度评分、故障类型、剩余寿命。别人有的，我们也有，是能力基石。</p>
-      </div>
-      <div class="card">
-        <div class="ico">⚡</div>
-        <h3>② 能耗显示</h3>
-        <p>稳态实际功耗、能效趋势、与基线逐时对比。我们的老本行，算法与「节能测算平台」同口径。</p>
-      </div>
-      <div class="card" style="border-color:rgba(34,211,238,.5);background:linear-gradient(180deg,rgba(34,211,238,.07),var(--panel2))">
-        <div class="ico">🔐</div>
-        <h3>③ 节能确权 <span style="font-size:12px;color:var(--cyan);font-weight:700">·差异化</span></h3>
-        <p>基线管理 + 工况归一 + 节能量核算 + 可审计证据链。为 <b>EMC 分成、碳核算、节能审计</b>提供“说得清”的数据。</p>
-      </div>
-    </div>
-
-    <div class="two" style="margin-top:26px;align-items:stretch">
-      <div class="card">
-        <h3 style="margin-bottom:10px">节能确权怎么做</h3>
-        <ol class="steps">
-          <li><b>建基线</b>：沉浀稳态工况库，形成可比对的能耗基线。</li>
-          <li><b>工况归一</b>：把能耗折算到统一工况，排除产量 / 工况波动干扰。</li>
-          <li><b>算节能</b>：实测输入功率 vs 基线，逐时 / 逐日核算节电量与节约金额。</li>
-          <li><b>存证</b>：带时间戳的本地记录，可导出审计报表 → 直接服务分成与碳核算。</li>
-        </ol>
-      </div>
-      <div class="card">
-        <h3 style="margin-bottom:10px">为什么这个组合稀缺</h3>
-        <ul class="why">
-          <li>做<b>状态监测</b>的，多半不懂节能算法与 EMC 结算——“省了多少”算不明白；</li>
-          <li>做<b>节能改造</b>的，多半没有设备侧数据采集——节能量靠估算，工况一变就扯皮；</li>
-          <li>我们<b>两头都在</b>：设备机理 + 轴功率算法（与测算平台同口径）+ 边缘本地采集。把“省了多少”变成<b>可复核、可存证、可分成</b>的数据。</li>
-        </ul>
-        <p class="punch">把设备健康和节能量，都变成能上桌分成的数据。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= 架构 ================= -->
-<section id="arch" style="background:var(--bg2)">
-  <div class="wrap">
-    <div class="eyebrow">系统架构</div>
-    <h2>五层链路：从传感器到现场话术</h2>
-    <p class="lead">每一层职责清晰，边界可审计。诊断模型与智能体分层，谁也不越权。</p>
-
-    <div class="arch">
-      <div class="layer">
-        <div class="tag"><i></i>① 设备接入层</div>
-        <div class="body">
-          <span class="chip">加速度计 IEPE</span><span class="chip">温度 / 压力 / 流量</span>
-          <span class="chip">现场摄像头</span><span class="chip">声学麦克风</span>
-          <span class="chip">变频器 Modbus</span><span class="chip">电流 / 母线电压 / 状态字</span>
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kt">健康度评分</div>
+        <div class="krow">
+          <svg class="ring" viewBox="0 0 72 72" aria-hidden="true">
+            <circle cx="36" cy="36" r="30" fill="none" stroke="#1e2c47" stroke-width="7"/>
+            <circle id="kRing" cx="36" cy="36" r="30" fill="none" stroke="#34d399" stroke-width="7"
+                    stroke-linecap="round" stroke-dasharray="188.5 188.5" transform="rotate(-90 36 36)"
+                    style="transition:stroke-dasharray .4s,stroke .4s"/>
+          </svg>
+          <div class="knum" id="kScore">100</div><div class="knl">/100</div>
         </div>
       </div>
-      <div class="arrow">▼</div>
-      <div class="layer">
-        <div class="tag"><i></i>② 数据层（本地）</div>
-        <div class="body"><span class="chip">时序库 · 断网缓存</span><span class="chip">特征提取：时域 / 频域 / 包络谱</span></div>
+      <div class="kpi"><div class="kt">诊断结论</div><div class="kv" id="kFault">正常</div></div>
+      <div class="kpi"><div class="kt">风险等级</div><div class="kv"><span class="pill normal" id="kRisk">normal</span></div></div>
+      <div class="kpi"><div class="kt">建议动作</div><div class="kv sm" id="kAct">维持当前巡检节奏</div></div>
+    </div>
+
+    <div class="plots">
+      <div class="panel">
+        <div class="pn-h"><span>时域波形 · 振动加速度</span><span class="hint" id="waveHint">实时</span></div>
+        <canvas id="waveCv"></canvas>
       </div>
-      <div class="arrow">▼</div>
-      <div class="layer ai">
-        <div class="tag"><i></i>③ AI 层 · RK3576 NPU</div>
-        <div class="body"><span class="chip">机理规则 / 轻量模型</span><span class="chip">RKNN INT8 · ≤50 ms</span><span class="chip">诊断报文 health_score / fault_type / risk_level</span></div>
-      </div>
-      <div class="arrow">▼</div>
-      <div class="layer ai">
-        <div class="tag"><i></i>④ 智能体层 · OpenClaw</div>
-        <div class="body"><span class="chip">读取 · 编排 · 翻译</span><span class="chip">四段式话术：结论 / 依据 / 建议 / 风险</span><span class="chip">告警 · 工单</span></div>
-      </div>
-      <div class="arrow">▼</div>
-      <div class="layer">
-        <div class="tag"><i></i>⑤ 应用层</div>
-        <div class="body"><span class="chip">本地看板</span><span class="chip">云边协同 · 远程运维</span></div>
+      <div class="panel">
+        <div class="pn-h"><span>包络谱 · 特征频率</span><span class="hint" id="envHint">1× 主导</span></div>
+        <canvas id="envCv"></canvas>
       </div>
     </div>
 
-    <div class="notice" style="border-color:rgba(34,211,238,.35);background:linear-gradient(180deg,rgba(34,211,238,.06),transparent)">
-      <h3 style="color:var(--cyan)">三条硬约束（安全边界）</h3>
-      <ul>
-        <li><b>诊断模型层负责「判」</b>：故障类型 / 健康度 / 风险等级 / 寿命，只由模型输出。</li>
-        <li><b>智能体层负责「说与做」</b>：OpenClaw 只读取、编排、翻译，<b>不得自行推断故障</b>。</li>
-        <li><b>不下高危指令</b>：停机 / 切泵只「建议并等待人工确认」，安全保护归设备既有系统。</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ================= DEMO ================= -->
-<!-- ================= 现场感知 ================= -->
-<section id="vision">
-  <div class="wrap">
-    <div class="eyebrow">现场感知 · 看得到 + 听得到</div>
-    <h2>摄像头看外观，麦克风听声音</h2>
-    <p class="lead">边缘盒子就装在设备旁边：<b>视频看外观</b>（跑冒滴漏 / 振动位移），<b>声学听运转</b>（汽蚀 / 轴承异响）——两路本地融合，判断设备是否<b>安全运转</b>。</p>
-
-    <div class="vision">
+    <div class="sense">
       <div class="cam">
         <video id="siteVideo" autoplay muted loop playsinline></video>
-        <svg class="sim" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice">
+        <svg class="sim" viewBox="0 0 640 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <linearGradient id="camBg" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="#0b1424"/><stop offset="1" stop-color="#060a12"/>
@@ -505,15 +326,15 @@
         </div>
       </div>
 
-      <div class="acoustic">
-        <h3>声学监测 <span id="db">72.4 dB(A)</span></h3>
+      <div class="panel acoustic">
+        <div class="ah">声学监测 <span id="db">72.4 dB(A)</span></div>
         <canvas class="spec" id="spec"></canvas>
         <div class="tags">
           <span class="atag ok">汽蚀噪声 未检出</span>
           <span class="atag ok">轴承异响 未检出</span>
           <span class="atag ok">气动噪声 正常</span>
         </div>
-        <p class="dim" style="font-size:12.5px;margin-top:auto;padding-top:14px">声纹特征本地提取，只上传“结论”，不上传音频。</p>
+        <p class="dim" style="font-size:12px;margin-top:auto;padding-top:10px">声纹特征本地提取，只上传「结论」，不上传音频。</p>
       </div>
     </div>
 
@@ -523,44 +344,18 @@
       <div class="vcard total"><div class="k">综合判定（双通道融合）</div><div class="v ok">✅ 安全运转</div></div>
     </div>
 
-    <p class="dim" style="margin-top:20px;font-size:13px">⚠️ 演示：画面与声谱为示意渲染（把现场视频存入 <code>assets/site-preview.mp4</code> 即自动播放真实画面）；边缘盒子按策略只做<b>预警与建议</b>，不下发控制指令；音视频本地处理、不上云。</p>
+    <p class="dim" style="margin-top:18px;font-size:12.5px">
+      ⚠️ 演示：波形 / 谱图为<b>机理仿真信号</b>（<code>python3 demo/run_demo.py</code> → 命中 <b>7/7</b>），画面与声谱为示意渲染（把现场视频放到 <code>assets/site-preview.mp4</code> 即自动播放真实画面）。阈值为演示值，投产前须用现场实测基线替换；系统只做预警与建议，不下发控制指令，数据本地处理不出场。
+    </p>
   </div>
 </section>
 
-<section id="demo">
-  <div class="wrap">
-    <div class="eyebrow">诊断能力演示</div>
-    <h2>零数据依赖，一条命令跑通全链路</h2>
-    <p class="lead">仓库内置旋转机械机理仿真，直接生成 7 类典型工况的振动信号并走完整条诊断链路——开箱即跑、可复现。</p>
-
-    <pre><code><span class="c">$ pip install -r requirements.txt</span>
-<span class="c">$ python3 demo/run_demo.py</span>
-
-仿真工况        诊断结论        健康度   风险      命中
-正常           正常             <span class="n">100</span>    normal   <span class="s">✅</span>
-轴承外圈缺陷    轴承外圈缺陷      <span class="n">58</span>     high     <span class="s">✅</span>
-轴承内圈缺陷    轴承内圈缺陷      <span class="n">48</span>     high     <span class="s">✅</span>
-转子不平衡      转子不平衡        <span class="n">50</span>     high     <span class="s">✅</span>
-联轴器不对中    联轴器不对中      <span class="n">66</span>     medium   <span class="s">✅</span>
-机械松动       机械松动          <span class="n">55</span>     high     <span class="s">✅</span>
-汽蚀           汽蚀             <span class="n">55</span>     high     <span class="s">✅</span>
-<span class="k">→ 命中率 7/7</span></code></pre>
-
-    <div class="shot" style="max-width:820px;margin:28px auto 0">
-      <img src="assets/demo_preview.png" alt="演示总览：时域 / 包络谱 / 健康度四联图">
-      <div class="cap">演示总览 · 时域 / 包络谱 / 健康度四联图（机理仿真信号）</div>
-    </div>
-  </div>
-</section>
-
-<!-- ================= 功耗仪表盘 ================= -->
+<!-- ================= 能耗看板 ================= -->
 <section id="power" style="background:var(--bg2)">
   <div class="wrap">
-    <div class="eyebrow">设备稳态运行 · 能耗可视化</div>
-    <h2>实际功耗仪表盘</h2>
-    <p class="lead">
-      边缘盒子按秒级采集电流 / 电压 / 转速，实时折算<b>实际输入功率</b>，并与额定、基线对比。<b>拖动下方参数即可实时联动演示。</b>
-    </p>
+    <div class="eyebrow">能耗看板 · 稳态运行</div>
+    <h2>实际功耗与年电费，实时折算</h2>
+    <p class="lead">按秒级采集电流 / 电压 / 转速，折算实际输入功率，与额定、基线对比。拖动参数即可联动。</p>
 
     <div class="dash">
       <div class="gauge-wrap">
@@ -598,7 +393,7 @@
           <label>泵效率 η <b><span id="lE">75</span> %</b></label>
           <input type="range" id="pE" min="40" max="92" step="1" value="75">
         </div>
-        <div class="ctl" style="margin-bottom:4px">
+        <div class="ctl" style="margin-bottom:2px">
           <label>年运行小时 <b><span id="lHr">8000</span> h</b></label>
           <input type="range" id="pHr" min="1000" max="8760" step="50" value="8000">
         </div>
@@ -608,7 +403,7 @@
           <div class="ro"><div class="n" id="roKwh">0.0 万kWh</div><div class="l">年耗电量</div></div>
           <div class="ro"><div class="n a" id="roCost">0.0 万元</div><div class="l">年电费（0.6 元/kWh）</div></div>
         </div>
-        <div style="margin-top:18px">
+        <div style="margin-top:16px">
           <label style="display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:2px">
             <span>能效状态</span><b id="roEff" style="color:var(--text)">—</b>
           </label>
@@ -617,23 +412,45 @@
       </div>
     </div>
 
-    <p class="dim" style="margin-top:22px;font-size:13px">
-      ⚠️ 演示数据：参数为示意值，算法与「节能测算平台」一致（轴功率法，已含电机效率 95% 折算为输入功率）；
-      现场实际功耗须以电表 / 采集器实测标定为准。
+    <p class="dim" style="margin-top:18px;font-size:12.5px">
+      ⚠️ 演示数据：算法与「节能测算平台」同口径（轴功率法，含电机效率 95% 折算为输入功率）；现场实际功耗须以电表 / 采集器实测标定为准。
     </p>
   </div>
 </section>
 
+<!-- ================= 定位与实证 ================= -->
+<section id="why">
+  <div class="wrap">
+    <div class="eyebrow">定位与实证</div>
+    <h2>状态监测 × 能耗显示 × 节能确权</h2>
+    <p class="lead">做监测的不懂节能算法与 EMC 结算，做节能的没有设备侧采集——我们两头都在，把「省了多少」变成可复核、可存证、可分成。</p>
+
+    <div class="grid3">
+      <div class="card"><div class="ico">🩺</div><h3>① 状态监测</h3><p>振动 / 电流 / 温度多信号 → 健康度、故障类型、风险等级。别人有的我们也有，是能力基石。</p></div>
+      <div class="card"><div class="ico">⚡</div><h3>② 能耗显示</h3><p>稳态实际功耗、能效趋势、与基线对比。老本行，算法与「节能测算平台」同口径。</p></div>
+      <div class="card hl"><div class="ico">🔐</div><h3>③ 节能确权 · 差异化</h3><p>基线管理 + 工况归一 + 节能量核算 + 可审计证据链，直接服务 EMC 分成、碳核算、节能审计。</p></div>
+    </div>
+
+    <div class="flow">
+      <span class="fc"><b>采集</b> IEPE / 温度 / 电流 / 声音</span><span class="ar">→</span>
+      <span class="fc"><b>边缘推理</b> RKNN INT8 · ≤50 ms</span><span class="ar">→</span>
+      <span class="fc"><b>智能体</b> 结论 / 依据 / 建议 / 风险</span><span class="ar">→</span>
+      <span class="fc"><b>看板 · 工单 · 云边协同</b></span>
+    </div>
+
+    <p class="punch">已交付实证：矿井三泵房排水（节电约 25%，回收 2.2 年）｜电厂干熄焦给水泵（节电 26.7%，年省 45 万）｜自备电厂 9 台锅炉风机（节电 10% 保守口径）｜130T/160T 给水泵群（年节电 194.6 万 kWh）。<span class="dim" style="font-weight:600;font-size:13.5px">脱敏结论，口径与节能测算平台一致，可现场复核。</span></p>
+  </div>
+</section>
+
 <!-- ================= 边界 ================= -->
-<section id="boundary">
+<section id="boundary" style="padding-top:0">
   <div class="wrap">
     <div class="notice">
       <h3>⚠️ 边界与声明 · 我们敢把界限写在这</h3>
       <ul>
-        <li><b>仿真数据</b>：本页/仓库用机理仿真的振动信号演示算法链路，<b>不能替代现场标定</b>；所有阈值为演示值，投产前必须用现场实测基线替换。</li>
-        <li><b>安全边界</b>：系统只做「预警 + 建议 + 辅助决策」，<b>不下发停机 / 切泵等控制指令</b>；硬保护回路由设备既有安全系统负责。</li>
-        <li><b>数据合规</b>：现场数据本地处理、不出场。</li>
-        <li><b>协议</b>：暂未指定开源协议（含商业资产，未经授权请勿商用）。</li>
+        <li><b>仿真数据</b>：本页/仓库用机理仿真的振动信号演示算法链路，<b>不能替代现场标定</b>；阈值为演示值，投产前必须用现场实测基线替换。</li>
+        <li><b>安全边界</b>：只做「预警 + 建议 + 辅助决策」，<b>不下发停机 / 切泵等控制指令</b>，硬保护回路归设备既有安全系统。</li>
+        <li><b>数据合规</b>：现场数据本地处理、不出场。｜<b>协议</b>：暂未指定开源协议（含商业资产，未经授权请勿商用）。</li>
       </ul>
     </div>
   </div>
@@ -643,22 +460,20 @@
 <footer id="contact">
   <div class="wrap">
     <div class="foot">
-      <div class="col" style="max-width:420px">
+      <div class="col">
         <b>合作与共建</b>
         面向 <b>高校共建（边缘计算实训室）</b> 与 <b>设备厂 / 终端用户（智能配套）</b>。<br>
-        建议路径：<b>先选一台最怕停的设备跑 4~8 周 PoC</b> → 出一份《设备健康与能耗对比报告》 → 再谈规模。<br>
-        有意向欢迎直接联系项目维护者。
+        建议路径：<b>先选一台最怕停的设备跑 4~8 周 PoC</b> → 出一份《设备健康与能耗对比报告》 → 再谈规模。
       </div>
-      <div class="col">
+      <div class="col" style="max-width:none">
         <b>相关平台</b>
         <a href="https://jeeftang.github.io/energy-calc-platform/">节能测算 Pro V2 · 工业节能测算平台</a>
       </div>
-      <div class="col">
+      <div class="col" style="max-width:none">
         <b>联系 · 加微信</b>
         <img src="assets/wechat-qr.png" alt="微信扫码加好友"
-             style="width:140px;height:140px;background:#fff;padding:7px;border-radius:12px;display:block;margin:4px 0 10px">
-        <div style="font-size:13px">微信扫一扫，加我好友</div>
-        <div style="margin-top:6px">唐先生 · 18041136555</div>
+             style="width:120px;height:120px;background:#fff;padding:6px;border-radius:12px;display:block;margin:4px 0 8px">
+        <div style="font-size:12.5px">微信扫一扫，加我好友 · 唐先生 18041136555</div>
       </div>
     </div>
     <div class="copy">
@@ -669,8 +484,158 @@
 </footer>
 
 <script>
+/* ===== 设备看板 · 机理仿真 ===== */
 (function(){
-  var C = 2*Math.PI*88, ARC = 0.75*C;        // 270° 弧
+  var CONDS = [
+    {id:'normal',   name:'正常',         score:100, risk:'normal', env:'1× 小幅',
+     act:'维持当前巡检节奏', peak:1.0},
+    {id:'outer',    name:'轴承外圈缺陷', score:58,  risk:'high',   env:'BPFO 3.58×',
+     act:'安排停机检查轴承外圈', peak:3.58},
+    {id:'inner',    name:'轴承内圈缺陷', score:48,  risk:'high',   env:'BPFI 5.42× + 1× 边带',
+     act:'尽快更换轴承', peak:5.42},
+    {id:'unbalance',name:'转子不平衡',   score:50,  risk:'high',   env:'1× 主导',
+     act:'停机做动平衡校正', peak:1.0},
+    {id:'misalign', name:'联轴器不对中', score:66,  risk:'medium', env:'1× + 2×',
+     act:'复检对中与联轴器', peak:2.0},
+    {id:'looseness',name:'机械松动',     score:55,  risk:'high',   env:'1× 谐波族',
+     act:'复紧地脚与连接件', peak:4.0},
+    {id:'cavitation',name:'汽蚀',        score:55,  risk:'high',   env:'宽带随机',
+     act:'检查进口压力 / 流量', peak:0}
+  ];
+  var byId = {}; CONDS.forEach(function(c){ byId[c.id]=c; });
+
+  /* --- chips --- */
+  var chips = document.getElementById('conds');
+  CONDS.forEach(function(c){
+    var b = document.createElement('button');
+    b.type='button'; b.className='chip-btn'; b.textContent=c.name; b.dataset.id=c.id;
+    b.addEventListener('click', function(){ select(c.id); });
+    chips.appendChild(b);
+  });
+
+  /* --- waveform synth --- */
+  function seedRnd(seed){ return function(){ seed=(seed*1103515245+12345)&0x7fffffff; return seed/0x7fffffff; }; }
+  var N = 720, buf = new Float32Array(N);
+  function build(i){
+    var c = byId[i], rnd = seedRnd(99+ i.length*7 + i.charCodeAt(0)*13), k;
+    for(k=0;k<N;k++){
+      var t = k/N*3;                       // 3 转
+      var w = 0;
+      var s1 = Math.sin(2*Math.PI*t);
+      var s2 = Math.sin(4*Math.PI*t);
+      if(c.id==='normal')      w = 0.16*s1 + (rnd()-0.5)*0.05;
+      else if(c.id==='outer'){
+        w = 0.18*s1 + (rnd()-0.5)*0.06;
+        var p = (t*3.58)%1;              // 周期冲击
+        w += 0.95*Math.exp(-p*11)*Math.sin(2*Math.PI*t*22);
+      } else if(c.id==='inner'){
+        w = 0.16*s1 + (rnd()-0.5)*0.06;
+        var m = 1+0.7*Math.sin(2*Math.PI*t);
+        var p2 = (t*5.42)%1;
+        w += 0.8*m*Math.exp(-p2*12)*Math.sin(2*Math.PI*t*24);
+      } else if(c.id==='unbalance') w = 0.88*s1 + (rnd()-0.5)*0.05;
+      else if(c.id==='misalign')    w = 0.52*s1 + 0.34*s2 + (rnd()-0.5)*0.06;
+      else if(c.id==='looseness')   w = 0.42*s1 + 0.26*s2 + 0.2*Math.sin(6*Math.PI*t) + 0.15*Math.sin(8*Math.PI*t) + (rnd()-0.5)*0.12;
+      else { /* cavitation */
+        var bn = (rnd()-0.5)*1.4;
+        w = 0.22*s1 + bn*(0.35+0.65*Math.abs(Math.sin(Math.PI*t*0.7)));
+      }
+      buf[k] = Math.max(-1, Math.min(1, w));
+    }
+  }
+
+  /* --- canvases --- */
+  var waveCv = document.getElementById('waveCv'), envCv = document.getElementById('envCv');
+  function fit(cv){
+    var r = cv.getBoundingClientRect(), d = window.devicePixelRatio||1;
+    cv.width = Math.max(1, Math.round(r.width*d)); cv.height = Math.max(1, Math.round(r.height*d));
+    var x = cv.getContext('2d'); x.setTransform(d,0,0,d,0,0); return {ctx:x, w:r.width, h:r.height};
+  }
+  var W = fit(waveCv), E = fit(envCv);
+  window.addEventListener('resize', function(){ W = fit(waveCv); E = fit(envCv); });
+
+  function drawWave(off){
+    var x = W.ctx, w = W.w, h = W.h, mid = h/2;
+    x.clearRect(0,0,w,h);
+    x.strokeStyle='#16233a'; x.lineWidth=1;
+    x.beginPath(); x.moveTo(0,mid); x.lineTo(w,mid); x.stroke();
+    x.beginPath();
+    x.strokeStyle='#22d3ee'; x.lineWidth=1.5;
+    var n = 240, step = w/(n-1);
+    for(var k=0;k<n;k++){
+      var idx = (Math.floor(off) + k*3) % N;
+      var v = buf[idx]*0.44;
+      var yy = mid - v*h;
+      k ? x.lineTo(k*step, yy) : x.moveTo(0, yy);
+    }
+    x.stroke();
+  }
+
+  var ENV_BINS = 48;
+  function drawEnv(id){
+    var x = E.ctx, w = E.w, h = E.h;
+    x.clearRect(0,0,w,h);
+    /* 网格 */
+    x.strokeStyle='#141f33'; x.lineWidth=1;
+    for(var g=1;g<4;g++){ var gy=h-g*(h/4); x.beginPath(); x.moveTo(0,gy); x.lineTo(w,gy); x.stroke(); }
+    var vals = new Array(ENV_BINS);
+    for(var i=0;i<ENV_BINS;i++) vals[i] = 0.05+Math.random()*0.04;
+    function put(f, a){
+      var idx = Math.round(f/8*(ENV_BINS-1)); if(idx<0) idx=0; if(idx>=ENV_BINS) idx=ENV_BINS-1;
+      vals[idx] = Math.max(vals[idx], a);
+      if(idx+1<ENV_BINS) vals[idx+1] = Math.max(vals[idx+1], a*0.55);
+      if(idx-1>=0)       vals[idx-1]   = Math.max(vals[idx-1], a*0.55);
+    }
+    if(id==='normal'){ put(1,0.22); put(2,0.09); }
+    else if(id==='outer'){ put(1,0.14); put(3.58,1.0); put(7.16,0.52); put(10.74,0.3); }
+    else if(id==='inner'){ put(1,0.42); put(4.42,0.34); put(5.42,0.98); put(6.42,0.34); }
+    else if(id==='unbalance'){ put(1,1.0); put(2,0.14); put(3,0.08); }
+    else if(id==='misalign'){ put(1,0.92); put(2,0.62); put(3,0.2); put(4,0.12); }
+    else if(id==='looseness'){ put(1,0.82); put(2,0.52); put(3,0.46); put(4,0.38); put(5,0.3); put(6,0.24); put(7,0.18); }
+    else { for(var m=0;m<ENV_BINS;m++) vals[m] = Math.max(vals[m], 0.12+Math.random()*0.5); }
+    /* 画柱 */
+    var bw = w/ENV_BINS;
+    for(var b=0;b<ENV_BINS;b++){
+      var bh = vals[b]*(h-16), grd = x.createLinearGradient(0,h,0,h-bh);
+      grd.addColorStop(0,'#166a86'); grd.addColorStop(1, vals[b]>0.6?'#f59e0b':'#22d3ee');
+      x.fillStyle = grd;
+      x.fillRect(b*bw+1.2, h-bh-4, Math.max(1.5, bw-2.4), bh);
+    }
+  }
+
+  /* --- KPI --- */
+  var C = 2*Math.PI*30;
+  function select(id){
+    var c = byId[id] || CONDS[0];
+    document.querySelectorAll('.chip-btn').forEach(function(el){
+      el.classList.toggle('on', el.dataset.id===c.id);
+    });
+    document.getElementById('kScore').textContent = c.score;
+    var col = c.score>=85 ? '#34d399' : (c.score>=62 ? '#f59e0b' : '#f87171');
+    var ring = document.getElementById('kRing');
+    ring.setAttribute('stroke', col);
+    ring.setAttribute('stroke-dasharray', (c.score/100*C).toFixed(1)+' '+C.toFixed(1));
+    document.getElementById('kFault').textContent = c.name;
+    document.getElementById('kAct').textContent = c.act;
+    document.getElementById('waveHint').textContent = c.id==='normal' ? '稳态' : '异常特征';
+    document.getElementById('envHint').textContent = c.env;
+    var r = document.getElementById('kRisk');
+    r.className = 'pill ' + c.risk;
+    r.textContent = c.risk;
+    build(c.id);
+    drawEnv(c.id);
+  }
+
+  var off = 0;
+  (function loop(){ off += 2.2; drawWave(off); requestAnimationFrame(loop); })();
+
+  select('normal');
+  window.addCond = select; /* 供外部调用 */
+})();
+
+/* ===== 能耗看板 ===== */
+(function(){
+  var C = 2*Math.PI*88, ARC = 0.75*C;
   var id = function(x){ return document.getElementById(x); };
   var q=id('pQ'), h=id('pH'), e=id('pE'), hr=id('pHr');
   var PRICE = 0.6, ETA_MOTOR = 0.95;
@@ -679,8 +644,8 @@
   function f(x,d){ var p=Math.pow(10,d); return (Math.round(x*p)/p).toFixed(d); }
   function calc(){
     var Q=+q.value, H=+h.value, ef=+e.value/100, hours=+hr.value;
-    var pAxis = Q*H/(367*ef);              // 轴功率 kW（Q m³/h, H m）
-    var pIn   = pAxis/ETA_MOTOR;           // 实际功耗 = 输入功率 kW
+    var pAxis = Q*H/(367*ef);              // 轴功率 kW
+    var pIn   = pAxis/ETA_MOTOR;           // 实际功耗 kW
     var kwh   = pIn*hours/10000;           // 万 kWh/年
     var cost  = pIn*hours*PRICE/10000;     // 万元/年
     var max   = niceMax(pIn*1.55);
@@ -701,44 +666,46 @@
   [q,h,e,hr].forEach(function(s){ s.addEventListener('input', calc); });
   calc();
 })();
-</script>
 
-<script>
+/* ===== 现场感知：视频回退 + 声谱 ===== */
 (function(){
-  var v=document.getElementById('siteVideo');
+  var v = document.getElementById('siteVideo');
   if(v){
-    v.addEventListener('canplay',function(){ v.style.display='block'; });
-    v.addEventListener('error',function(){ v.style.display='none'; });
-    v.src='assets/site-preview.mp4';
+    v.addEventListener('canplay', function(){ v.style.display='block'; });
+    v.addEventListener('error', function(){ v.style.display='none'; });
+    v.src = 'assets/site-preview.mp4';
   }
-  var cv=document.getElementById('spec');
+  var cv = document.getElementById('spec');
   if(cv && cv.getContext){
-    var ctx=cv.getContext('2d'), N=56, bars=new Array(N);
-    for(var k=0;k<N;k++) bars[k]=0.15;
-    function size(){ var r=cv.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
-      cv.width=Math.max(1,r.width*dpr); cv.height=Math.max(1,r.height*dpr); ctx.setTransform(dpr,0,0,dpr,0,0); }
-    size(); window.addEventListener('resize',size);
-    var dbEl=document.getElementById('db');
+    var ctx = cv.getContext('2d'), N = 52, bars = new Array(N), k;
+    for(k=0;k<N;k++) bars[k]=0.15;
+    function size(){
+      var r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio||1;
+      cv.width = Math.max(1, r.width*dpr); cv.height = Math.max(1, r.height*dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+    size(); window.addEventListener('resize', size);
+    var dbEl = document.getElementById('db');
     (function frame(){
-      var r=cv.getBoundingClientRect(), W=r.width, H=r.height;
+      var r = cv.getBoundingClientRect(), W = r.width, H = r.height;
       ctx.clearRect(0,0,W,H);
-      var bw=W/N, base=0.18+0.10*Math.sin(Date.now()/900);
+      var bw = W/N, base = 0.18+0.10*Math.sin(Date.now()/900);
       for(var i=0;i<N;i++){
-        var env =Math.exp(-Math.pow((i-N*0.12)/(N*0.20),2));
-        var env2=Math.exp(-Math.pow((i-N*0.55)/(N*0.13),2))*0.5;
-        var t=Math.min(1, base+env*0.62+env2+Math.random()*0.22);
-        bars[i]+=(t-bars[i])*0.25;
-        var h=bars[i]*(H-14);
-        var g=ctx.createLinearGradient(0,H,0,H-h);
+        var env  = Math.exp(-Math.pow((i-N*0.12)/(N*0.20),2));
+        var env2 = Math.exp(-Math.pow((i-N*0.55)/(N*0.13),2))*0.5;
+        var t = Math.min(1, base+env*0.62+env2+Math.random()*0.22);
+        bars[i] += (t-bars[i])*0.25;
+        var hh = bars[i]*(H-14);
+        var g = ctx.createLinearGradient(0,H,0,H-hh);
         g.addColorStop(0,'#22d3ee'); g.addColorStop(1,'#34d399');
-        ctx.fillStyle=g;
-        ctx.fillRect(i*bw+1.2, H-h-4, Math.max(1.5,bw-2.4), h);
+        ctx.fillStyle = g;
+        ctx.fillRect(i*bw+1.2, H-hh-4, Math.max(1.5,bw-2.4), hh);
       }
       requestAnimationFrame(frame);
     })();
     if(dbEl) setInterval(function(){ dbEl.textContent=(72.0+Math.random()*1.6).toFixed(1)+' dB(A)'; },700);
   }
-  var vt=document.getElementById('vT');
+  var vt = document.getElementById('vT');
   if(vt) setInterval(function(){ vt.textContent=(61.5+Math.random()*1.2).toFixed(0); },1400);
 })();
 </script>
