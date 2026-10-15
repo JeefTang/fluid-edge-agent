@@ -65,7 +65,7 @@
 
   /* panel base */
   .panel{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:var(--radius)}
-  .pn-h{display:flex;align-items:baseline;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;font-weight:700}
+  .pn-h{display:flex;align-items:baseline;justify-content:space-between;padding:7px 14px;border-bottom:1px solid var(--line);font-size:12.5px;font-weight:700}
   .pn-h .hint{font-size:11.5px;color:var(--dim);font-weight:600;font-variant-numeric:tabular-nums}
 
   /* chips */
@@ -78,13 +78,13 @@
   /* board */
   .kpis{display:grid;grid-template-columns:1.05fr 1.25fr .95fr 1.5fr;gap:12px;margin-top:20px}
   @media(max-width:900px){.kpis{grid-template-columns:1fr 1fr}}
-  .kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center}
-  .kpi .kt{font-size:11.5px;color:var(--dim);font-weight:700;letter-spacing:.04em}
-  .kpi .kv{font-size:17px;font-weight:800;margin-top:5px;line-height:1.35}
-  .kpi .kv.sm{font-size:14px;font-weight:700;color:var(--muted)}
-  .krow{display:flex;align-items:center;gap:10px;margin-top:4px}
-  .ring{width:52px;height:52px;flex:none}
-  .knum{font-size:30px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
+  .kpi{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:9px 14px;display:flex;flex-direction:column;justify-content:center}
+  .kpi .kt{font-size:11px;color:var(--dim);font-weight:700;letter-spacing:.04em}
+  .kpi .kv{font-size:15.5px;font-weight:800;margin-top:3px;line-height:1.3}
+  .kpi .kv.sm{font-size:13.5px;font-weight:700;color:var(--muted)}
+  .krow{display:flex;align-items:center;gap:9px;margin-top:2px}
+  .ring{width:42px;height:42px;flex:none}
+  .knum{font-size:26px;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
   .knl{font-size:12px;color:var(--dim)}
   .pill{display:inline-block;font-size:12.5px;font-weight:800;padding:3px 11px;border-radius:999px}
   .pill.normal{background:rgba(52,211,153,.14);color:var(--green)}
@@ -93,12 +93,12 @@
 
   .plots{display:grid;grid-template-columns:1.3fr 1fr;gap:12px;margin-top:12px}
   @media(max-width:900px){.plots{grid-template-columns:1fr}}
-  .plot canvas{display:block;width:100%;height:132px;background:#05080f;border-radius:0 0 var(--radius) var(--radius)}
+  .plots canvas,.plot canvas{display:block;width:100%;height:104px;background:#05080f;border-radius:0 0 var(--radius) var(--radius)}
 
   /* sense row */
   .sense{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:12px}
   @media(max-width:900px){.sense{grid-template-columns:1fr}}
-  .cam{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#04070d;aspect-ratio:16/8.2}
+  .cam{position:relative;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#04070d;aspect-ratio:16/5.5}
   .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
   .cam svg.sim{position:absolute;inset:0;width:100%;height:100%;display:block}
   .cam .scan{position:absolute;left:0;right:0;height:34%;top:-34%;background:linear-gradient(180deg,transparent,rgba(34,211,238,.10),transparent);animation:scan 5.5s linear infinite;pointer-events:none}
@@ -122,19 +122,19 @@
   @keyframes spin{to{transform:rotate(360deg)}}
   .vib{transform-box:fill-box;animation:vib .1s infinite}
   @keyframes vib{0%,100%{transform:translate(0,0)}50%{transform:translate(.6px,-.5px)}}
-  .acoustic{padding:0 16px 14px;display:flex;flex-direction:column}
-  .acoustic .ah{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0 10px;font-size:13px;font-weight:700;border-bottom:1px solid var(--line)}
-  .acoustic #db{font-size:17px;color:var(--cyan);font-variant-numeric:tabular-nums;font-weight:800}
-  .spec{width:100%;height:112px;margin-top:12px;border-radius:10px;background:#05080f;border:1px solid var(--line)}
-  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .acoustic{padding:0 14px 10px;display:flex;flex-direction:column}
+  .acoustic .ah{display:flex;justify-content:space-between;align-items:baseline;padding:8px 0 7px;font-size:12.5px;font-weight:700;border-bottom:1px solid var(--line)}
+  .acoustic #db{font-size:16px;color:var(--cyan);font-variant-numeric:tabular-nums;font-weight:800}
+  .spec{width:100%;height:80px;margin-top:9px;border-radius:10px;background:#05080f;border:1px solid var(--line)}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
   .atag{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--muted)}
   .atag.ok{border-color:rgba(52,211,153,.4);color:var(--green)}
 
   .verdict{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:12px;margin-top:12px}
   @media(max-width:820px){.verdict{grid-template-columns:1fr}}
-  .vcard{border:1px solid var(--line);border-radius:12px;padding:12px 15px;background:rgba(255,255,255,.02)}
-  .vcard .k{font-size:12px;color:var(--muted)}
-  .vcard .v{font-size:15.5px;font-weight:800;margin-top:3px}
+  .vcard{border:1px solid var(--line);border-radius:12px;padding:8px 13px;background:rgba(255,255,255,.02)}
+  .vcard .k{font-size:11.5px;color:var(--muted)}
+  .vcard .v{font-size:14.5px;font-weight:800;margin-top:1px}
   .vcard .v.ok{color:var(--green)}
   .vcard.total{border-color:rgba(52,211,153,.45);background:linear-gradient(180deg,rgba(52,211,153,.09),transparent)}
 
@@ -194,6 +194,20 @@
   .foot a:hover{color:var(--cyan)}
   .copy{margin-top:24px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--dim);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
   code{font-family:"SFMono-Regular",Consolas,Menlo,monospace;color:#c9d7f0;background:#060a13;border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:12.5px}
+
+  /* --- 设备看板 · 紧凑一屏排版 --- */
+  #board{padding:18px 0 20px}
+  #board .eyebrow{margin-bottom:3px;font-size:11.5px}
+  #board h2{font-size:clamp(19px,2.3vw,24px);margin-bottom:4px}
+  #board p.lead{font-size:13.5px;line-height:1.5}
+  #board .chips{margin-top:11px;gap:7px}
+  #board .chip-btn{padding:5px 13px;font-size:12.5px}
+  #board .kpis{margin-top:11px}
+  #board .verdict{margin-top:11px}
+  #board .plots{margin-top:11px}
+  #board .sense{margin-top:11px}
+  #board > .wrap > p.dim{margin-top:9px !important;font-size:11.5px;line-height:1.45}
+  .acoustic > p.dim{font-size:11.5px !important;padding-top:6px !important}
 </style>
 </head>
 <body>
@@ -557,18 +571,36 @@
   function drawWave(off){
     var x = W.ctx, w = W.w, h = W.h, mid = h/2;
     x.clearRect(0,0,w,h);
-    x.strokeStyle='#16233a'; x.lineWidth=1;
+    /* 背景网格：横向 4 格 + 纵向时间刻度，避免整块死黑 */
+    x.strokeStyle='#122036'; x.lineWidth=1;
+    for(var g=1;g<5;g++){ var gy=g*(h/5); x.beginPath(); x.moveTo(0,gy); x.lineTo(w,gy); x.stroke(); }
+    for(var gv=1;gv<8;gv++){ var gx=gv*(w/8); x.beginPath(); x.moveTo(gx,0); x.lineTo(gx,h); x.stroke(); }
+    x.strokeStyle='#1d2e4a'; x.lineWidth=1;
     x.beginPath(); x.moveTo(0,mid); x.lineTo(w,mid); x.stroke();
-    x.beginPath();
-    x.strokeStyle='#22d3ee'; x.lineWidth=1.5;
-    var n = 240, step = w/(n-1);
+    /* 自动增益：让不同工况的波形都填满画布（不再是贴中线的一条直线） */
+    var mx=1e-4, q; for(q=0;q<N;q++){ var a=Math.abs(buf[q]); if(a>mx) mx=a; }
+    var gain=(h*0.42)/mx;
+    var n=360, step=w/(n-1), pts=[];
+    x.beginPath(); x.strokeStyle='#22d3ee'; x.lineWidth=1.4; x.lineJoin='round';
     for(var k=0;k<n;k++){
-      var idx = (Math.floor(off) + k*3) % N;
-      var v = buf[idx]*0.44;
-      var yy = mid - v*h;
+      var idx=(Math.floor(off)+k*2)%N;
+      var yy=mid-buf[idx]*gain;
+      pts.push([k*step, yy]);
       k ? x.lineTo(k*step, yy) : x.moveTo(0, yy);
     }
     x.stroke();
+    /* 波形带填充（半透明），提升可读性 */
+    x.beginPath(); x.moveTo(0,mid);
+    for(var k2=0;k2<pts.length;k2++) x.lineTo(pts[k2][0], pts[k2][1]);
+    x.lineTo(w,mid); x.closePath();
+    var fg=x.createLinearGradient(0,0,0,h);
+    fg.addColorStop(0,'rgba(34,211,238,.22)');
+    fg.addColorStop(.5,'rgba(34,211,238,.05)');
+    fg.addColorStop(1,'rgba(34,211,238,.22)');
+    x.fillStyle=fg; x.fill();
+    /* 幅值标注 */
+    x.fillStyle='#4d6288'; x.font='10px ui-monospace,Menlo,monospace';
+    x.fillText('±'+mx.toFixed(2)+' g', 8, 13);
   }
 
   var ENV_BINS = 48;
