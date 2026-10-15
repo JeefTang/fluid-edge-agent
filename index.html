@@ -208,6 +208,98 @@
   #board .sense{margin-top:11px}
   #board > .wrap > p.dim{margin-top:9px !important;font-size:11.5px;line-height:1.45}
   .acoustic > p.dim{font-size:11.5px !important;padding-top:6px !important}
+
+  /* ================= 手机优先（绝大多数访客用手机看） ================= */
+  @media(max-width:640px){
+    body{line-height:1.6;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
+    .wrap{padding:0 16px}
+    section{padding:36px 0}
+    h2{font-size:21px}
+    h3{font-size:15.5px}
+    p.lead{font-size:14px}
+
+    /* 顶栏 */
+    .nav-in{height:52px}
+    header.nav .brand{font-size:15px;gap:8px}
+    header.nav .brand small{font-size:9px;letter-spacing:.06em}
+
+    /* 首屏 */
+    .hero{padding:34px 0 26px}
+    h1{font-size:27px;line-height:1.22}
+    .hero p.sub{font-size:14.5px;margin-bottom:20px}
+    .badge-row{gap:7px;margin-bottom:14px}
+    .badge{font-size:11.5px;padding:3px 10px}
+    .btn{padding:12px 18px;font-size:14px}
+    .stats{margin-top:22px;gap:9px}
+    .stat{padding:11px 13px}
+    .stat .n{font-size:18px}
+    .stat .l{font-size:12px}
+
+    /* 设备看板 */
+    #board{padding:14px 0 16px}
+    #board p.lead{font-size:13.5px}
+    #board .chips{gap:8px;margin-top:12px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 6px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+    #board .chips::-webkit-scrollbar{display:none}
+    #board .chip-btn{flex:0 0 auto;white-space:nowrap;padding:8px 14px;font-size:13px;min-height:38px;display:inline-flex;align-items:center}
+    .kpis{grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+    .kpi{padding:10px 13px;min-height:74px}
+    .kpi:nth-child(1){grid-column:1 / -1;min-height:84px}
+    .kpi:nth-child(4){grid-column:1 / -1}
+    .kpi .kt{font-size:11.5px}
+    .kpi .kv{font-size:15px}
+    .kpi .kv.sm{font-size:13.5px}
+    .ring{width:46px;height:46px}
+    .knum{font-size:29px}
+    .knl{font-size:12px}
+    .plots{grid-template-columns:1fr;gap:10px}
+    .plots canvas,.plot canvas{height:124px}
+    .pn-h{padding:8px 13px;font-size:12.5px}
+    .sense{grid-template-columns:1fr;gap:10px}
+    .cam{aspect-ratio:16/9.2}
+    .cam .hud{font-size:11.5px}
+    .cam .hud .bot{gap:6px;left:9px;right:9px;bottom:9px}
+    .cam .hud .bot span{font-size:10.5px;padding:2px 7px}
+    .cam .bbox .lb{font-size:10.5px;padding:2px 7px}
+    .cam .hud .tl{top:9px;left:9px}
+    .cam .hud .rec{top:9px;right:9px}
+    .acoustic .ah{font-size:12.5px}
+    .spec{height:92px}
+    .atag{font-size:11.5px;padding:4px 10px}
+    .verdict{grid-template-columns:1fr;gap:8px;margin-top:10px}
+    .vcard{padding:9px 13px}
+    .vcard .k{font-size:11.5px}
+    .vcard .v{font-size:14.5px}
+
+    /* 能耗看板 */
+    .dash{grid-template-columns:1fr;gap:16px;margin-top:18px}
+    .gauge-wrap{max-width:260px}
+    .ctrl-card{padding:16px}
+    .ctl label{font-size:13.5px}
+    input[type=range]{height:7px}
+    input[type=range]::-webkit-slider-thumb{width:22px;height:22px}
+    input[type=range]::-moz-range-thumb{width:22px;height:22px}
+    .readouts{grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}
+    .ro{padding:10px 12px}
+    .ro .n{font-size:16px}
+    .ro .l{font-size:11px}
+
+    /* 定位与实证 */
+    .grid3{grid-template-columns:1fr;gap:11px;margin-top:16px}
+    .card{padding:16px}
+    .card p{font-size:13.5px}
+    .flow{gap:7px;margin-top:16px}
+    .flow .fc{font-size:12px;padding:6px 11px}
+    .punch{font-size:14.5px;padding-left:12px;margin-top:16px}
+
+    /* 声明 / 页脚 */
+    .notice{padding:16px}
+    .notice ul{margin-left:16px;font-size:13px}
+    footer{padding:26px 0}
+    .foot{gap:18px}
+    .foot .col{font-size:13px}
+    .copy{margin-top:18px;padding-top:14px;font-size:11.5px;gap:6px}
+    code{font-size:11.5px}
+  }
 </style>
 </head>
 <body>
